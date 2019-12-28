@@ -8,11 +8,11 @@ if(!(isset($_SESSION['login']))){
     exit;
 }
 
-include "base.html";
-include "header.php";
+include_once "base.html";
+include_once "header.php";
 
-include "functions.php";
-include "database.php";
-include "config.php";
+include_once "functions.php";
+include_once "database.php";
+//include_once "config.php";
 
 ?>

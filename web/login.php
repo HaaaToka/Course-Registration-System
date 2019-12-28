@@ -14,12 +14,12 @@ $newconn = new ConnectDB($sn,$un,$pss,$db);
 $message = "";
 
 if(isset($_POST['form'])){
-    print_r($_POST);
+    print_r($_POST);    
     $userid = $_POST['userid'];
     $password = $_POST['password'];
     #$password =  hash("sha1",$_POST['password'],false);
 
-    if($_POST['type']=='student'){
+    if($_POST['role']=='student'){
         $sql = "SELECT * FROM Users WHERE userid='$userid'AND password='$password'";
     }
     else{
@@ -42,7 +42,7 @@ if(isset($_POST['form'])){
             $token = hash("sha1",generateRandomString(10),false);
             $_SESSION["login"] = "true";
             $_SESSION["userid"]=$row['userid'];
-            $_SESSION["type"]=$_POST['type'];
+            $_SESSION["role"]=$_POST['role'];
             $_SESSION["token"] = $token;
             ?> <script>window.location="index.php"</script> <?php
         }
@@ -69,7 +69,7 @@ if(isset($_POST['form'])){
         <p><label for="password">P4SSw0rd:</label><br />
         <input type="password" id="password" name="password"></p>
 
-        <select name="type" id="type">
+        <select name="role" id="role">
             <option value="student">student</option>
             <option value="teacher">teacher</option>
         </select>

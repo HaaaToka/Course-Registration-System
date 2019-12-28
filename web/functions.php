@@ -10,4 +10,42 @@ function generateRandomString($length = 10) {
     return $randomString;
 }
 
+
+function addRowToMyClassTable($row,$count){
+    echo "<tr>";
+    echo "<td>".$count."</td>";
+    echo "<td>".$row["CourseName"]."</td>";
+    echo "<td>".$row["credit"]."</td>";
+    echo "</tr>";
+}
+
+function printCreditOnTopOfGrid($newconn,$studentid){
+
+    $sql = "SELECT * FROM Student S WHERE S.studentID=:studentid";
+    $stmt = $newconn->conn->prepare($sql);
+    $stmt->execute(array('studentid'=>$studentid));
+    
+
+    if(!$stmt){
+        die("Error: ". print_r($stm->errorInfo()));
+    }
+    else{
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $type="success";
+        if($row['creditLimit']==0){
+            $type="danger";
+        }
+        else{
+            $type="primary";
+        }
+
+        echo '<div class="alert alert-'.$type.'" role="alert">';
+        echo "Heyy! ".$row['name']." ".$row['surname']." your remaining credit is <strong>".$row['creditLimit']."</strong>";
+        echo "</div>";
+    }
+        
+
+}
+
+
 ?>

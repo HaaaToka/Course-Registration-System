@@ -1,6 +1,8 @@
 <?php
 
 
+$mainLocation = "/Course-Registration-System/web/";
+
 $loglogin="okan";
 $passpassword="okan123";
 

@@ -1,7 +1,8 @@
 
+<?php include_once "config.php"?>
 
 <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="index.php"><img width="125" height="50" src="media/img/hackerman.png"></a>
+    <a class="navbar-brand" href="<?php echo $mainLocation;?>/index.php"><img width="125" height="50" src="<?php echo $mainLocation;?>/media/img/hackerman.png"></a>
 
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -12,16 +13,21 @@
         <ul class="navbar-nav mr-auto">
 
             <li class="nav-item">
-                <a class="nav-link" href="media/img/hackDatabase.png">Link</a>
+                <a class="nav-link" href="<?php echo $mainLocation;?>/media/img/hackDatabase.png">Link</a>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
-                    HELLOOOO
+                    MENU
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a href="#">dersler</a>
-                    <a href="#">cartcurt</a>
+                    <?php if($_SESSION["role"]=="student"){?>  
+                        <a href="<?php echo $mainLocation;?>/student/myClass.php" class="dropdown-item">My Classes</a>
+                        <a href="<?php echo $mainLocation;?>/student/myProfile.php" class="dropdown-item">My Profile</a>
+                    <?php }elseif($_SESSION["role"]=="instructor"){?>
+                        <a href="<?php echo $mainLocation;?>/instructor/myClass.php" class="dropdown-item">My Classes</a>
+                        <a href="<?php echo $mainLocation;?>/instructor/myProfile.php" class="dropdown-item">My Profile</a>  
+                    <?php }?>
                 </div>
             </li>
             <li class="nav-item" >
@@ -41,12 +47,12 @@
 
             if(isset($_SESSION['login'])){
 ?>
-            <input type="button" value="LOGOUT" onclick="window.location.href='logout.php'">
+            <input type="button" value="LOGOUT" onclick="window.location.href='<?php echo $mainLocation;?>/logout.php'">
 <?php
             }
             else{
 ?>
-            <input type="button" value="LOGIN" onclick="window.location.href='login.php'">
+            <input type="button" value="LOGIN" onclick="window.location.href='<?php echo $mainLocation;?>/login.php'">
 <?php
             }
 ?>
