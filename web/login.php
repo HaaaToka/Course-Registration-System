@@ -7,7 +7,7 @@ include "functions.php";
 include "base.html";
 include "header.php";
 #include_once "includer.php";
-
+echo "naber";
 $newconn = new ConnectDB($sn,$un,$pss,$db);
 
 
@@ -26,7 +26,7 @@ if(isset($_POST['form'])){
         $sql = "SELECT * FROM Users WHERE userid='$userid'AND password='$password'";
     }
     $stmt = $newconn->conn->prepare($sql);
-    
+
     if(!$stmt){
         die("Error: ". print_r($stm->errorInfo()));
     }
@@ -74,7 +74,7 @@ if(isset($_POST['form'])){
             <option value="teacher">teacher</option>
         </select>
 
-        <button type="submit" name="form" value="submit">LogIn</button>  
+        <button type="submit" name="form" value="submit">LogIn</button>
 
     </form>
 
@@ -83,7 +83,7 @@ if(isset($_POST['form'])){
 </div>
 
 
-<?php 
+<?php
 
 
 
