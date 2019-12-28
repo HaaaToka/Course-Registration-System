@@ -1,7 +1,10 @@
 <?php
 
+include "includer.php";
 
-echo "hello world"
+echo "INDEX BOX bOX";
+print_r($_SESSION);
+
 
 ?>
 
