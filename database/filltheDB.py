@@ -1,18 +1,26 @@
 import pymysql
+from collections import defaultdict
+from functions import *
 
-DB = pymysql.connect(host='localhost',
-                     user='jotpot',
-                     password='JotForm1-',
+
+tables = ['StudentHasGradedClass', 'StudentTakenCourse', 'InstructorGivesCourse', 'Section','Class','PrerequisiteCourses', 'Course', 'Student', 'Instructor','Department', 'Faculty']
+
+
+DB = pymysql.connect(host='167.71.66.201',
+                     user='kole',
+                     password='Scrool12*',
                      db='471DB')
 
-try:
-    sql = "show tables"
-    cursor = DB.cursor()
-    cursor.execute(sql)
-    data = cursor.fetchall()
-    for d in data:
-        print(d)
-    DB.close()
-
-except:
-    print("!!!!!!!!!!!!!!")
+# fac_dep = generateFacDep()
+# truncateAllTables(tables)
+# insertFacDep(fac_dep)
+# nsS=list(name_surnameStudent())
+# insertStudent(DB,nsS)
+# nsI = list(name_surnameInstructor())
+# insertInstructor(DB,nsI)
+# insertCourse(DB)
+# insertClass(DB)
+# insertSection(DB)
+# insertPre(DB)
+csThings(DB)
+DB.close()
