@@ -10,6 +10,13 @@ function generateRandomString($length = 10) {
     return $randomString;
 }
 
+function sqli_check_1($data)
+{
+   #if database's character set is big5, this is exploitable
+    return addslashes($data);
+    
+}
+
 
 function addRowToMyClassTable($row,$count){
     echo "<tr>";

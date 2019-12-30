@@ -7,7 +7,7 @@ include "functions.php";
 include "base.html";
 include "header.php";
 #include_once "includer.php";
-echo "naber";
+
 $newconn = new ConnectDB($sn,$un,$pss,$db);
 
 
@@ -20,36 +20,36 @@ if(isset($_POST['form'])){
     #$password =  hash("sha1",$_POST['password'],false);
 
     if($_POST['role']=='student'){
-        $sql = "SELECT * FROM Users WHERE userid='$userid'AND password='$password'";
+        $sql = "SELECT * FROM UsersStudent WHERE userid='$userid'AND password='$password'";
     }
     else{
-        $sql = "SELECT * FROM Users WHERE userid='$userid'AND password='$password'";
+        $sql = "SELECT * FROM UsersInstructor WHERE userid='$userid'AND password='$password'";
     }
     $stmt = $newconn->conn->prepare($sql);
 
     if(!$stmt){
-        die("Error: ". print_r($stm->errorInfo()));
+        die("Error: ". print_r($stmt->errorInfo()));
     }
     else{
-    $stmt->execute();
+        $stmt->execute();
 
-    if($stmt->rowCount()!=0){
-        $row = $stmt->fetch();
-        echo print_r($row);
+        if($stmt->rowCount()!=0){
+            $row = $stmt->fetch();
+            echo print_r($row);
 
-        if($row){
-            #session_regenerate_id(true);
-            $token = hash("sha1",generateRandomString(10),false);
-            $_SESSION["login"] = "true";
-            $_SESSION["userid"]=$row['userid'];
-            $_SESSION["role"]=$_POST['role'];
-            $_SESSION["token"] = $token;
-            ?> <script>window.location="index.php"</script> <?php
+            if($row){
+                #session_regenerate_id(true);
+                $token = hash("sha1",generateRandomString(10),false);
+                $_SESSION["login"] = "true";
+                $_SESSION["userid"]=$row['userid'];
+                $_SESSION["role"]=$_POST['role'];
+                $_SESSION["token"] = $token;
+                ?> <script>window.location="index.php"</script> <?php
+            }
         }
-    }
-    else{
-        $message = "<font color=\"red\">Invalid credentials or user not activated!</font>";
-    }
+        else{
+            $message = "<font color=\"red\">Invalid credentials or user not activated!</font>";
+        }
     }
 
 }
