@@ -22,5 +22,11 @@ DB = pymysql.connect(host='167.71.66.201',
 # insertClass(DB)
 # insertSection(DB)
 # insertPre(DB)
-csThings(DB)
+# csThings(DB)
+# deletecs(DB)
+instructor2klass(DB)
+
+
+
+
 DB.close()

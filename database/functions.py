@@ -358,7 +358,7 @@ def insertCourse(dbCon):
             for nn in noo:
                 courseName1=courseName+nn
                 credit = randint(1, 10)
-                sql1 = "call insertCourse('%s','%s',%d,%d)" #name,credit,depid
+                sql1 = "call insertCourse('%s','%s',%d,%d)" #code,name,credit,depid
                 # sql1="call insertCourse('"+courseName1+"',"+str(credit)+","+str(dep[0])+");"
                 cursor.execute(sql1%(courseName1,courseName1,credit,dep[0]))
                 print(sql1)
@@ -401,11 +401,11 @@ def insertSection(dbCon):
             for sid in range(randint(1,1)):
                 if(countDay==1):
                     sql1 = "call insertSection(%d,%d,%d,'%s','%s','%s','%s','','','','','','')"
-                    cursor.execute(sql1%(klass[1],klass[0],kota,"d"+str(kota),dd[0],st[0],et[0]))
+                    cursor.execute(sql1%(sid+1,klass[0],kota,"d"+str(kota),dd[0],st[0],et[0]))
                 else:
                     sql1="call insertSection(%d,%d,%d,'%s','%s','%s','%s','%s','%s','%s','','','')"
-                    cursor.execute(sql1 % (klass[1], klass[0], kota, "d" + str(kota), dd[0], st[0], et[0],dd[1], st[1], et[1]))
-                print(sql1)
+                    cursor.execute(sql1 % (sid+1, klass[0], kota, "d" + str(kota), dd[0], st[0], et[0],dd[1], st[1], et[1]))
+                print(klass[0])
     dbCon.commit()
 
 def insertPre(dbCon):
@@ -421,5 +421,304 @@ def insertPre(dbCon):
     dbCon.commit()
 
 
-def csThings(dbCoc):
-    print("okk")
+def generateCSCourse():
+    fullcourse=list()
+
+    labli="""
+BBM406	Fundamentals of Machine Learning	Spring	3 0 3	6	English
+BBM409	Machine Learning Laboratory	Spring	0 2 1	4	English
+BBM412	Computer Graphics	Spring	3 0 3	6	English
+BBM413	Fundamentals of Image Processing	Fall	3 0 3	6	English
+BBM414	Computer Graphics Laboratory	Spring	0 2 1	4	English
+BBM415	Image Processing Laboratory	Fall	0 2 1	4	English
+BBM416	Fundamentals of Computer Vision	Spring	3 0 3	6	English
+BBM418	Computer Vision Laboratory	Spring	0 2 1	4	English
+BBM421	Game Technologies	Fall	3 0 3	6	English
+BBM422	Mobile Computing	Spring	3 0 3	6	English
+BBM423	Game Technologies Laboratory	Fall	0 2 1	4	English
+BBM424	Mobile Computing Laboratory	Spring	0 2 1	4	English
+BBM432	Embedded Systems	Spring	3 0 3	6	English
+BBM433	Microprocessors	Fall	3 0 3	6	English
+BBM434	Embedded Systems Laboratory	Spring	0 2 1	4	English
+BBM436	Microprocessors Laboratory	Spring	0 2 1	4	English
+BBM444	Fundamentals of Computational Photography	Spring	3 0 3	6	English
+BBM446	Computational Photography Laboratory	Spring	0 2 1	4	English
+BBM451	Computer Networks	Fall	3 0 3	6	English
+BBM452	Data Communications	Spring	3 0 3	6	English
+BBM453	Computer Networks Laboratory	Fall	0 2 1	4	English
+BBM458	Wireless and Mobil Networks	Fall	3 0 3	6	English
+BBM459	Secure Programming Laboratory	Fall	0 2 1	4	English
+BBM460	Wireless and Mobil Networks Laboratory	Fall	0 2 1	4	English
+BBM463	Information Security	Fall	3 0 3	6	English
+BBM465	Information Security Laboratory	Fall	0 2 1	4	English
+BBM467	Data Intensive Applications	Fall	3 0 3	6	English
+BBM469	Data Intensive Applications Laboratory	Fall	0 2 1	4	English
+BBM471	Database Management Systems	Fall	3 0 3	6	English
+BBM472	Geographic Information Systems	Spring	3 0 3	6	English
+BBM473	Database Laboratory	Spring	0 2 1	4	English
+BBM474	Geographic Information Systems Laboratory	Spring	0 2 1	4	English
+BBM481	Software Development	Fall	3 0 3	6	English
+BBM482	Software Quality Assurance	Spring	3 0 3	6	English
+BBM483	Software Development Laboratory	Fall	0 2 1	4	English
+BBM484	Software Quality Assurance Laboratory	Spring	0 2 1	4	English
+BBM488	Web Services Laboratory	Spring	0 2 1	4	English
+BBM490	Fundamentals of Web Architecture	Spring	3 0 3	6	English
+BBM491	Personal Software Process	Fall	3 0 3	6	English
+BBM492	Team Software Process	Spring	3 0 3	6	English
+BBM493	Personal Software Process Laboratory	Fall	0 2 1	4	English
+BBM494	Team Software Process Laboratory	Spring	0 2 1	4	English
+BBM495	Introduction to Natural Language Processing	Fall/Spring	3 0 3	6	English
+    """
+
+    labsiz="""
+BBM401	Automata Theory and Formal Languages	Fall	3 0 3	6	English
+BBM402	Theory of Computation	Spring	3 0 3	6	English
+BBM403	Combinatorics and Graph Theory	Fall	3 0 3	6	English
+BBM404	Fundamentals of Compiler Construction	Spring	3 0 3	6	English
+BBM405	Fundamentals of Artificial Intelligence	Fall	3 0 3	6	English
+BBM407	Fuzzy Logic	Fall	3 0 3	6	English
+BBM408	Algorithm Analysis	Spring	3 0 3	6	English
+BBM410	Dynamical Systems	Spring	3 0 3	6	English
+BBM411	Fundamentals of Bioinformatics	Fall	3 0 3	6	English
+BBM420	Design Project II	Spring	0 6 3	6	English
+BBM431	Advanced Computer Architectures	Fall	3 0 3	6	English
+BBM441	Introduction to High Performance Computing	Fall/Spring	3 0 3	6	English
+BBM442	Parallel Processing	Spring	3 0 3	6	English
+BBM456	Computer and Network Security	Spring	3 0 3	6	English
+BBM461	Secure Programming	Fall	3 0 3	6	English
+BBM462	Social and Economic Networks	Fall	3 0 3	6	English
+BBM475	Management Information Systems	Fall	3 0 3	6	English
+BBM485	Software Architectures	Fall	3 0 3	6	English
+BBM486	Design Patterns	Spring	3 0 3	6	English
+BBM498	Software Requirements	Fall	3 0 3	6	English
+    """
+
+    labli = labli.split("\n")
+    labli.pop()
+    labli.pop(0)
+    for cou in labli:
+        line = cou.split()
+        code=line[0]
+        name=" ".join(line[1:-6])
+        if("Laboratory" in name):
+            continue
+        term=line[-6]
+        credit=int(line[-2])+4
+        if("Fall" in term and "Spring" in term):
+            fullcourse.append([code,name,term.split("/")[0],credit])
+            fullcourse.append([code,name,term.split("/")[1],credit])
+        else:
+            fullcourse.append([code,name,term,credit])
+
+    labsiz = labsiz.split("\n")
+    labsiz.pop()
+    labsiz.pop(0)
+    for cou in labsiz:
+        line=cou.split()
+        code=line[0]
+        name=" ".join(line[1:-6])
+        term=line[-6]
+        credit=int(line[-2])
+        if("Fall" in term and "Spring" in term):
+            fullcourse.append([code,name,term.split("/")[0],credit])
+            fullcourse.append([code,name,term.split("/")[1],credit])
+        else:
+            fullcourse.append([code,name,term,credit])
+
+
+    services="""
+1st Semester
+Course Code 	Course Name 	Theoretic-Practical-Credit 	ECTS Credit 	Course Language
+BBM101	Introduction to Programming I	3 0 3	6	English
+BBM103	Introduction to Programming Laboratory I	0 2 1	4	English
+MAT123	Mathematics I	4 2 5	6	English
+FİZ137	Physics I	4 0 4	5	English
+BBM105	Introduction to Computer Engineering	1 0 1	2	English
+İNG111	Language Skills I	3 0 3	3	English
+TKD103	Turkish I	2 0 2	2	Turkish
+BEB 650	Basic Information and Communication Technologies	0 2 1	2	English
+
+2nd Semester
+Course Code 	Course Name 	Theoretic-Practical-Credit 	ECTS Credit 	Course Language
+BBM102	Introduction to Programming II	3 0 3	8	English
+BBM104	Introduction to Programming Laboratory II	0 2 1	4	English
+MAT124	Mathematics II	4 2 5	6	English
+FİZ138	Physics II	4 0 4	5	English
+FİZ117	General Physics Lab.	0 3 1	2	English
+İNG112	Language Skills II	3 0 3	3	English
+TKD104	Turkish II	2 0 2	2	Turkish
+
+3rd Semester
+Course Code	Course Name	Theoretic-Practical-Credit 	ECTS Credit 	Course Language
+BBM201	Data Structures	3 0 3	5	English
+BBM203	Software Laboratory I	0 2 1	2	English
+BBM205	Discrete Structures	3 0 3	5	English
+BBM231	Logic Design	3 0 3	5	English
+BBM233	Logic Design Lab	0 2 1	2	English
+İST299	Probability	3 0 3	5	English
+AİT203	Ataturks Princ. And The History of The Revol. I	2 0 2	2	Turkish
+HAS222	Occupational Health and Safety I	1 0 1	1	Turkish
+    Nontechnical Elective	3 0 3	3	
+
+4th Semester
+Course Code 	Course Name 	Theoretic-Practical-Credit 	ECTS Credit 	Course Language
+BBM202	Algorithms	3 0 3	4	English
+BBM204	Software Laboratory II	0 2 1	2	English
+BBM234	Computer Organization	3 0 3	4	English
+MAT254	Fundamentals of Linear Algebra	3 0 3	4	English
+ELE296	Introduction to Electronic Circ. and Syst.	3 0 3	5	English
+İST292	Statistics	3 0 3	5	English
+AİT204	Ataturks Princ. And The History of The Revol. II	2 0 2	2	Turkish
+HAS223	Occupational Health and Safety II	1 0 1	1	Turkish
+    Nontechnical Elective	3 0 3	3	
+
+5th Semester
+Course Code 	Course Name 	Theoretic-Practical-Credit 	ECTS Credit 	Course Language
+BBM301	Programming Languages	3 0 3	4	English
+BBM325	Internship I	0 4 2	5	English
+BBM341	Systems Programming	3 0 3	4	English
+BBM371	Data Management	3 0 3	4	English
+BBM	Technical Elective	3 0 3	6	English
+BBM	Technical Elective Lab.	0 2 1	4	English
+    Nontechnical Elective	3 0 3	3	
+
+6th Semester
+Course Code 	Course Name 	Theoretic-Practical-Credit 	ECTS Credit 	Course Language
+BBM342	Operating Systems	3 0 3	5	English
+BBM382	Software Engineering	3 0 3	5	English
+BBM384	Software Engineering Lab.	0 2 1	4	English
+BBM	Technical Elective	3 0 3	6	English
+BBM	Technical Elective	3 0 3	6	English
+    Nontechnical Elective	3 0 3	4	
+
+7th Semester
+Course Code 	Course Name 	Theoretic-Practical-Credit 	ECTS Credit 	Course Language
+BBM419	Design Project I	3 2 4	10	English
+BBM425	Internship II	0 4 2	5	English
+BBM427	Technology Seminars I	0 2 1	1	English
+BBM	Technical Elective	3 0 3	6	English
+BBM	Technical Elective Lab.	0 2 1	4	English
+    Nontechnical Elective	3 0 3	4	
+
+8th Semester
+Course Code 	Course Name 	Theoretic-Practical-Credit 	ECTS Credit 	Course Language
+BBM428	Technology Seminars II	0 2 1	1	English
+BBM	Technical Elective	3 0 3	6	English
+BBM	Technical Elective	3 0 3	6	English
+BBM	Technical Elective	3 0 3	6	English
+BBM	Technical Elective Lab.	0 2 1	4	English
+BBM	Technical Elective Lab.	0 2 1	4	English
+    Nontechnical Elective	3 0 3	3	
+    """
+    services=services.split("\n")
+    services.pop()
+    services.pop(0)
+
+    tt=["Fall","Spring"]
+    tc=1
+    for cou in services:
+        line = cou.split()
+        if(len(line)==0 or line[0]=="Course" or line[0]=="BBM" or "Nontec" in line[0]):
+            continue
+        if(line[1]=="Semester"):
+            tc+=1
+            continue
+        if(line[0]=="BEB"):
+            line[0]="BEB650"
+            line.pop(1)
+        code=line[0].replace("İ","I")
+        name=" ".join(line[1:-5])
+        term=tt[tc%2]
+        credit=int(line[-2])
+        if("Lab." in name or "Laboratory" in name):
+            temp=fullcourse.pop()
+            temp[-1]+=credit
+            fullcourse.append(temp)
+            continue
+        fullcourse.append([code,name,term,credit])
+
+    return fullcourse
+
+def csThings(dbCon):
+    courses = generateCSCourse()
+    depid=41
+    year = [x for x in range(2012,2020)]
+    day=["Monday","Tuesday","Wednesday","Thursday","Friday"]
+    time=["9:00-11:00","9:00-12:00","10:00-12:00","10:00-13:00","13:00-15:00","13:00-16:00"]
+
+
+    with dbCon.cursor() as cursor:
+        cursor.execute("SET FOREIGN_KEY_CHECKS=0")
+        cursor.execute("select count(*) from Course")
+        courseid=cursor.fetchall()[0][0]+1
+        #print(courseid)
+        cursor.execute("select count(*) from Class")
+        klassid=cursor.fetchall()[0][0]+1
+        #print(klassid)
+
+        #['BBM202', 'Algorithms', 'Spring', 6]
+        for course in courses:
+            #print(course)
+
+            sqlCourse = "call insertCourse('%s','%s',%d,%d)" #code,name,credit,depid
+            cursor.execute(sqlCourse%(course[0],course[1],course[3],41))
+
+            for yyyy in year:
+                sqlKlass = "call insertClass(%d,%d,'%s')" # courseid,year,term
+                cursor.execute(sqlKlass%(courseid,yyyy,course[2]))
+                klassid+=1
+
+                countDay=randint(1,2)
+                dd=[]
+                st=[]
+                et=[]
+                kota=randint(5,15)
+                for _ in range(countDay):
+                    dd.append(day[randint(0,4)])
+                    tempTime=time[randint(0,5)].split("-")
+                    st.append(tempTime[0])
+                    et.append(tempTime[1])
+                for sid in range(randint(1,2)):
+                    if(countDay==1):
+                        sqlSection = "call insertSection(%d,%d,%d,'%s','%s','%s','%s','','','','','','')" #sectionid,classid,quota,location,day,start,end
+                        cursor.execute(sqlSection%(sid+1,klassid,kota,"d"+str(kota),dd[0],st[0],et[0]))
+                    else:
+                        sqlSection="call insertSection(%d,%d,%d,'%s','%s','%s','%s','%s','%s','%s','','','')"
+                        cursor.execute(sqlSection % (sid+1, klassid, kota, "d" + str(kota), dd[0], st[0], et[0],dd[1], st[1], et[1]))
+                    #print("\t\tsec-",sid)
+                #print("\tkla-",klassid)
+            print("cou-",courseid)
+            courseid+=1
+    dbCon.commit()
+"""
+'823', '830'
+'826', '832'
+'821', '828'
+'828', '833'
+'833', '840'
+'825', '831'
+'848', '854'
+PRerquites
+"""
+
+
+def deletecs(dbCon):
+    courseS=777
+    klassS=6209
+
+    with dbCon.cursor() as cursor:
+        cursor.execute("SET FOREIGN_KEY_CHECKS=0")
+        sqlDelSec = "delete from Section where classID>=%d"
+        cursor.execute(sqlDelSec%(klassS))
+
+        sqlDelKlas="delete from Class where classID>=%d"
+        cursor.execute(sqlDelKlas%(klassS))
+
+        sqlDelCourse="delete from Course where courseID>=%d"
+        cursor.execute(sqlDelCourse%(courseS))
+    
+    dbCon.commit();
+
+
+def instructor2klass(dbCon):
+    return 1
