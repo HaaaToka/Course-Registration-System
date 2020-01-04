@@ -1,8 +1,0 @@
-
-                    <?php if($_SESSION["role"]=="student"){?>  
-                        <a href="<?php echo $mainLocation;?>/student/myClass.php" class="dropdown-item">My Classes</a>
-                        <a href="<?php echo $mainLocation;?>/student/myProfile.php" class="dropdown-item">My Profile</a>
-                    <?php }elseif($_SESSION["role"]=="instructor"){?>
-                        <a href="<?php echo $mainLocation;?>/instructor/myClass.php" class="dropdown-item">My Classes</a>
-                        <a href="<?php echo $mainLocation;?>/instructor/myProfile.php" class="dropdown-item">My Profile</a>  
-                    <?php }?>

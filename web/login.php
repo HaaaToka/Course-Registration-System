@@ -21,9 +21,11 @@ if(isset($_POST['form'])){
 
     if($_POST['role']=='student'){
         $sql = "SELECT * FROM UsersStudent WHERE userid='$userid'AND password='$password'";
+        $sqlDep = "Select departmentID from Student where studentID=$userid";
     }
     else{
         $sql = "SELECT * FROM UsersInstructor WHERE userid='$userid'AND password='$password'";
+        $sqlDep="Select departmentID from Instructor where instructorID=$userid";
     }
     $stmt = $newconn->conn->prepare($sql);
 
@@ -43,6 +45,15 @@ if(isset($_POST['form'])){
                 $_SESSION["login"] = "true";
                 $_SESSION["userid"]=$row['userid'];
                 $_SESSION["role"]=$_POST['role'];
+                $_SESSION["term"]="Fall";
+                $_SESSION["year"]=2019;
+
+                $stmt=$newconn->conn->prepare($sqlDep);
+                $stmt->execute();
+                $row2 = $stmt->fetch();
+                print_r($row2);
+                $_SESSION['departmentID'] = $row2['departmentID'];
+
                 $_SESSION["token"] = $token;
                 ?> <script>window.location="index.php"</script> <?php
             }
@@ -69,10 +80,12 @@ if(isset($_POST['form'])){
         <p><label for="password">P4SSw0rd:</label><br />
         <input type="password" id="password" name="password"></p>
 
+        <p><label for="role">Role:</label><br />
         <select name="role" id="role">
             <option value="student">student</option>
             <option value="teacher">teacher</option>
         </select>
+        </p>
 
         <button type="submit" name="form" value="submit">LogIn</button>
 

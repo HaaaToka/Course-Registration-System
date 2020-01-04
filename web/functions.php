@@ -12,7 +12,9 @@ function generateRandomString($length = 10) {
 
 function sqli_check_1($data)
 {
-   #if database's character set is big5, this is exploitable
+    #if database's character set is big5, this is exploitable
+    #sunun duzgununu yaz
+    #$data = mysql_real_escape_string($data,ENT_QUOTES);
     return addslashes($data);
     
 }

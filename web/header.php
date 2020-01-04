@@ -25,6 +25,7 @@
                     <?php if($_SESSION["role"]=="student"){?>  
                         <a href="<?php echo $mainLocation;?>student/myClass.php" class="dropdown-item">My Classes</a>
                         <a href="<?php echo $mainLocation;?>student/myProfile.php" class="dropdown-item">My Profile</a>
+                        <a href="<?php echo $mainLocation;?>student/courseRegistration.php" class="dropdown-item">Course Registration</a>  
                     <?php }elseif($_SESSION["role"]=="instructor"){?>
                         <a href="<?php echo $mainLocation;?>instructor/myClass.php" class="dropdown-item">My Classes</a>
                         <a href="<?php echo $mainLocation;?>instructor/myProfile.php" class="dropdown-item">My Profile</a>  

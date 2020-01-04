@@ -553,8 +553,7 @@ Course Code	Course Name	Theoretic-Practical-Credit 	ECTS Credit 	Course Language
 BBM201	Data Structures	3 0 3	5	English
 BBM203	Software Laboratory I	0 2 1	2	English
 BBM205	Discrete Structures	3 0 3	5	English
-BBM231	Logic Design	3 0 3	5	English
-BBM233	Logic Design Lab	0 2 1	2	English
+BBM231	Logic Design	3 0 3	7	English
 İST299	Probability	3 0 3	5	English
 AİT203	Ataturks Princ. And The History of The Revol. I	2 0 2	2	Turkish
 HAS222	Occupational Health and Safety I	1 0 1	1	Turkish
@@ -717,8 +716,14 @@ def deletecs(dbCon):
         sqlDelCourse="delete from Course where courseID>=%d"
         cursor.execute(sqlDelCourse%(courseS))
     
-    dbCon.commit();
+    dbCon.commit()
 
+
+def student2klass(dbCon):
+    
+    with dbCon.cursor() as cursor:
+
+        cursor.execute()
 
 def instructor2klass(dbCon):
     return 1
