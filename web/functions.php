@@ -23,6 +23,7 @@ function sqli_check_1($data)
 function addRowToMyClassTable($row,$count){
     echo "<tr>";
     echo "<td>".$count."</td>";
+    echo "<td>".$row["CourseCode"]."</td>";
     echo "<td>".$row["CourseName"]."</td>";
     echo "<td>".$row["credit"]."</td>";
     echo "</tr>";
@@ -49,12 +50,69 @@ function printCreditOnTopOfGrid($newconn,$studentid){
         }
 
         echo '<div class="alert alert-'.$type.'" role="alert">';
-        echo "Heyy! ".$row['name']." ".$row['surname']." your remaining credit is <strong>".$row['creditLimit']."</strong>";
+        echo "Heyy! ".$row['name']." ".$row['surname'].", your remaining credit is <strong>".$row['creditLimit']."</strong>";
         echo "</div>";
     }
         
 
 }
+
+function addRow2JoinCourseTable($row,$numberofrow,$color){ #color for taken or not
+    if($color)
+        echo '<tr class="table-dark">';
+    else
+        echo '<tr>';
+    echo '<th scope="row">'.$numberofrow.'</th>';
+    echo '<td>'.$row["CourseCode"].'</td>';
+    echo '<td>'.$row["CourseName"].'</td>';
+    echo '<td>'.$row["sectionID"].'</td>';
+    #suraya hocayıda ekle
+    echo "</tr>";
+}
+
+function alreadyTaken($takenCourses,$checkKlass){
+
+    $res=false;
+
+    foreach($takenCourses as $taken){
+        if($taken['CourseCode']==$checkKlass){
+            $res=true;
+            break;
+        }
+    }
+
+    return $res;
+}
+
+function takenCoursesbyMe($connection,$myid){
+    $sqlTakenCourses="call OneStudentTookAllCourse(".$myid.")";
+    $stmt=$connection->prepare($sqlTakenCourses);
+    $stmt->execute();
+    $tcs = $stmt->fetchall();
+    // foreach($tcs as $tc){
+    //     addRow2JoinCourseTable($tc,-1);
+    // }
+    return $tcs;
+}
+
+function listCourseToJoin($connection,$yyyy,$tterm,$depid,$stuID){
+
+    $takenCourses = takenCoursesbyMe($connection,$stuID);
+
+    $sqldepcour="call myDepartmentOpenCourse(".$yyyy.",'".$tterm."',".$depid.")";
+    $stmt = $connection->prepare($sqldepcour);
+    if(!$stmt){
+        die("Error: ". print_r($stmt->errorInfo()));
+    }
+    else{
+        $stmt->execute();
+        $i=1;
+        foreach($stmt as $row){
+            addRow2JoinCourseTable($row,$i++,alreadyTaken($takenCourses,$row['CourseCode']));
+        }
+    }
+}
+
 
 
 ?>

@@ -35,6 +35,7 @@ printCreditOnTopOfGrid($newconn,$_SESSION['userid']);
                 <thead>
                     <tr>
                     <th scope="col">#</th>
+                    <th scope="col">Course Code</th>
                     <th scope="col">Course Name</th>
                     <th scope="col">Course Credit</th>
                     </tr>
@@ -45,12 +46,9 @@ printCreditOnTopOfGrid($newconn,$_SESSION['userid']);
 
             <?php
 
-                $sql = "call 471DB.OneStudentTookAllCourse(:userid)";
-                $stmt = $newconn->conn->prepare($sql);
-                $stmt->execute(array('userid'=>$_SESSION['userid']));
-                //print_r($stmt);
+                $allmycourse = takenCoursesbyMe($newconn->conn,$_SESSION['userid']);
                 $count=1;
-                foreach($stmt as $row){
+                foreach($allmycourse as $row){
                     addRowToMyClassTable($row,$count++);
                 }
             ?>
