@@ -11,7 +11,6 @@ $message="";
 
 if(isset($_POST['form'])){
     $newconn = new ConnectDB($sn,$un,$pss,$db);
-    
     // $sql = "call registration(':nname',':ssurname',':ppassword',:yyear)";
     // $stmt = $newconn->conn->prepare($sql);
     // $stmt -> bindParam('name',$_POST['name'],PDO::PARAM_STR);
@@ -21,12 +20,12 @@ if(isset($_POST['form'])){
 
     $nname = sqli_check_1($_POST['name']);
     $ssurname = sqli_check_1($_POST['surname']);
-    $ppass = sqli_check_1($_POST['password']);
+    // $ppass = sqli_check_1($_POST['password']);
     $yyear =sqli_check_1($_POST['startyear']);
     $uuserid=-1;
-    $sql="call registration('".$nname."','".$ssurname."','".$ppass."',".$yyear.")";
+    // $sql="call registration('".$nname."','".$ssurname."','".$ppass."',".$yyear.")";
+    $sql="call registration('".$nname."','".$ssurname."',".$yyear.")";
     $stmt = $newconn->conn->prepare($sql);
-
     if(!$stmt){
         die("Error: ". print_r($stmt->errorInfo()));
     }
@@ -35,9 +34,8 @@ if(isset($_POST['form'])){
         if($stmt->rowCount()!=0){
             $row = $stmt->fetch();
             // echo print_r($row);
-
             if($row){
-                $message = 'Yuppiii! You are a student at OYT. Your Student ID = '.$row['sid'].'<br><a href="../login.php">Click Me To Log In</a>';
+                $message = 'Yuppiii! You are a student at OYT. <br> Your Student ID = '.$row['sid'].' Password='.$nname.$ssurname.'123 <br><a href="../login.php">Click Me To Log In</a>';
             }
         }
         else{
@@ -67,8 +65,8 @@ if(isset($_POST['form'])){
         <p><label for="surname">Surname:</label><br />
         <input type="text" id="surname" name="surname"></p>
 
-        <p><label for="password">Password:</label><br />
-        <input type="password" id="password" name="password"></p>
+        <!-- <p><label for="password">Password:</label><br />
+        <input type="password" id="password" name="password"></p> -->
         
         <p><label for="startyear">Start Year:</label><br />
             <select name="startyear" id="startyear">

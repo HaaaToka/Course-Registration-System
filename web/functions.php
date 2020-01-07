@@ -57,25 +57,26 @@ function printCreditOnTopOfGrid($newconn,$studentid){
 
 }
 
-function addRow2JoinCourseTable($row,$numberofrow,$color){ #color for taken or not
+function addRow2JoinCourseTable($row){ #color for taken or not
     if($color)
         echo '<tr class="table-dark">';
     else
         echo '<tr>';
-    echo '<th scope="row">'.$numberofrow.'</th>';
     echo '<td>'.$row["CourseCode"].'</td>';
     echo '<td>'.$row["CourseName"].'</td>';
     echo '<td>'.$row["sectionID"].'</td>';
     #suraya hocayıda ekle
+    echo '<td><button type="button" class="btn btn-danger" classid="'.$row["classID"].'" sectionid="'.$row["sectionID"].'" id="join">x</button></td>';
     echo "</tr>";
 }
 
-function alreadyTaken($takenCourses,$checkKlass){
+function isAlreadyTaken($takenCourses,$checkKlass){
 
     $res=false;
 
     foreach($takenCourses as $taken){
-        if($taken['CourseCode']==$checkKlass){
+        if($taken==$checkKlass){
+            
             $res=true;
             break;
         }
@@ -84,33 +85,18 @@ function alreadyTaken($takenCourses,$checkKlass){
     return $res;
 }
 
+
 function takenCoursesbyMe($connection,$myid){
     $sqlTakenCourses="call OneStudentTookAllCourse(".$myid.")";
     $stmt=$connection->prepare($sqlTakenCourses);
     $stmt->execute();
-    $tcs = $stmt->fetchall();
-    // foreach($tcs as $tc){
-    //     addRow2JoinCourseTable($tc,-1);
-    // }
-    return $tcs;
-}
-
-function listCourseToJoin($connection,$yyyy,$tterm,$depid,$stuID){
-
-    $takenCourses = takenCoursesbyMe($connection,$stuID);
-
-    $sqldepcour="call myDepartmentOpenCourse(".$yyyy.",'".$tterm."',".$depid.")";
-    $stmt = $connection->prepare($sqldepcour);
-    if(!$stmt){
-        die("Error: ". print_r($stmt->errorInfo()));
+    //$tcs = $stmt->fetchall();
+    $classes=[];
+    foreach($stmt as $tc){
+        array_push($classes,$tc['classID']);
+        addRow2JoinCourseTable($tc);
     }
-    else{
-        $stmt->execute();
-        $i=1;
-        foreach($stmt as $row){
-            addRow2JoinCourseTable($row,$i++,alreadyTaken($takenCourses,$row['CourseCode']));
-        }
-    }
+    return $classes;
 }
 
 

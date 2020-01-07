@@ -1,13 +1,29 @@
 <?php  
 //page=10&yyyy=2019&depid=41&tterm=Fall
 
+function isAlreadyTaken($takenCourses,$checkKlass){
+    $res=false;
+    foreach($takenCourses as $taken){
+        if($taken==$checkKlass){
+            
+            $res=true;
+            break;
+        }
+    }
+
+    return $res;
+}
+
+
 include_once "../database.php";
 include_once "../config.php";
 include_once "../function.php";
 
 $newconn = new ConnectDB($sn,$un,$pss,$db);
 
-$record_per_page = '';  
+$myklases=[];
+$searching = '-1';
+$record_per_page = 10;  
 $page = '';  
 $output = '';  
 if(isset($_POST["page"]))
@@ -18,12 +34,24 @@ else
 
 if(isset($_POST["cpp"]))
     $record_per_page=$_POST["cpp"];
-else
-    $record_per_page=10;
 
-$start_from = ($page - 1)*$record_per_page;  
-$sqldepcour="SELECT * FROM joincourseclasssection where year=".$_POST['year']." and term='".$_POST['term']."' and departmentID=".$_POST['depid']." order by courseID DESC limit ".$start_from.",".$record_per_page;
+if(isset($_POST["sc"]))
+    $searching=$_POST["sc"];
 
+if(isset($_POST['myclasses']))
+    $myklases = $_POST['myclasses'];
+
+
+$start_from = ($page - 1)*$record_per_page; 
+
+if($searching=="-1"){
+    $sqldepcour="SELECT * FROM joincourseclasssection where year=".$_POST['year']." and term='".$_POST['term']."' and departmentID=".$_POST['depid']." order by courseID DESC limit ".$start_from.",".$record_per_page;
+    $page_query = "SELECT count(*) as coc FROM joincourseclasssection where year=".$_POST['year']." and term='".$_POST['term']."' and departmentID=".$_POST['depid']; 
+}
+else{
+    $sqldepcour="SELECT * FROM (SELECT * FROM joincourseclasssection where year=".$_POST['year']." and term='".$_POST['term']."' and departmentID=".$_POST['depid']." order by courseID DESC limit ".$start_from.",".$record_per_page.") as tbl where CourseCode LIKE '%".$searching."%' or CourseName LIKE '%".$searching."%'";
+    $page_query = "SELECT count(*) as coc FROM joincourseclasssection where year=".$_POST['year']." and term='".$_POST['term']."' and departmentID=".$_POST['depid']." and (CourseCode LIKE '%".$searching."%' or CourseName LIKE '%".$searching."%')"; 
+}
 $stmt = $newconn->conn->prepare($sqldepcour);
 
 if(!$stmt){
@@ -31,34 +59,47 @@ if(!$stmt){
 }
 else{
     $output .= '  
-        <h1 class="display-4">Join Class</h1>
+            <h1 class="display-7">Join Class</h1>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <button class="btn btn-outline-secondary" type="button">Search</button>
+                </div>
+                <input type="text" id="search" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
+            </div>
             <table class="table table-hover">
                 <thead>
                     <tr>
-                    <th scope="col">#</th>
                     <th scope="col">Course Code</th>
                     <th scope="col">Course Name</th>
                     <th scope="col">Section Number</th>
+                    <th scope="col">Remaining Quota</th>
+                    <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody> 
     ';
-    $i=1;
+    //$i=1;
     $stmt->execute();
     foreach($stmt as $row){
+        if(isAlreadyTaken($myklases,$row['classID'])){
+            $button='<button type="button" class="btn btn-warning" classid="'.$row["classID"].'" sectionid="'.$row["sectionID"].'" id="join">?</button>';
+        }
+        else{
+            $button='<button type="button" class="btn btn-success" classid="'.$row["classID"].'" sectionid="'.$row["sectionID"].'" id="join">+</button>';
+        }
         $output.='
             <tr>
-                <th scope="row">'.$i++.'</th>
                 <td>'.$row["CourseCode"].'</td>
                 <td>'.$row["CourseName"].'</td>
                 <td>'.$row["sectionID"].'</td>
+                <td>'.$row["quota"].'</td>
+                <td>'.$button.'</td>
             </tr>
         ';
     }
     
     $output .= ' </tbody></table><br /><nav aria-label="Page navigation example"><ul class="pagination pagination-lg justify-content-center">';  
 
-    $page_query = "SELECT count(*) as coc FROM joincourseclasssection where year=".$_POST['year']." and term='".$_POST['term']."' and departmentID=".$_POST['depid']; 
 
     $stmt = $newconn->conn->prepare($page_query);
     $stmt->execute();
