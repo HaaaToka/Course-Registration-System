@@ -63,6 +63,26 @@ $newconn = new ConnectDB($sn,$un,$pss,$db);
     });
     
   }
+
+  function delete_update_join_Class(functionName,stuid,klassid,secid){
+    $.ajax({
+      url:"api.php",
+      type:"POST",
+      data:{
+              function:functionName,
+              studentid:stuid,
+              classid:klassid,
+              sectionid:secid
+      },
+      success:function(data){
+        alert(data);
+      },
+      complete:function(){
+        document.location.reload(true);
+      }
+    });
+  }
+
   // domAction , class, function
   $(document).on('click','.page-link',function(){
       var page=$(this).attr("id");
@@ -75,15 +95,40 @@ $newconn = new ConnectDB($sn,$un,$pss,$db);
       load_data(1,coursePerPage,"-1");
   });
 
-  $(document).on('click','.btn-success',function(){
-      console.log($(this).attr("classid"));
-      console.log($(this).attr("sectionid"));
-  });
-
   $(document).on('click','.btn-outline-secondary',function(){
       var searchcourse = document.getElementById("search").value;
       var coursePerPage = document.getElementById("cpp").innerHTML;
       load_data(1,coursePerPage,searchcourse);  
+  });
+
+  $(document).on('click','.btn-success',function(){
+      var cid=$(this).attr("classid");
+      var sid=$(this).attr("sectionid");
+      var uid='<?php echo $_SESSION['userid']?>';
+      console.log("attend ",cid,sid,uid);
+      if(window.confirm('Are you sure you want to join this class?')){
+        delete_update_join_Class("join",uid,cid,sid);
+      }
+  });
+
+  $(document).on('click','.btn-danger',function(){
+      var cid=$(this).attr("classid");
+      var sid=$(this).attr("sectionid");
+      var uid='<?php echo $_SESSION['userid']?>';
+      console.log("delete",cid,sid,uid);
+      if (window.confirm('Are you sure you want to drop this class?')) {
+        delete_update_join_Class("delete",uid,cid,sid);
+      }
+  });
+
+  $(document).on('click','.btn-warning',function(){
+      var cid=$(this).attr("classid");
+      var sid=$(this).attr("sectionid");
+      var uid='<?php echo $_SESSION['userid']?>';
+      console.log("update",cid,sid,uid);
+      if (window.confirm('Are you sure you want to update section of this class?')) {
+        delete_update_join_Class("update",uid,cid,sid);
+      }
   });
   
 

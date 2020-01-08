@@ -58,10 +58,7 @@ function printCreditOnTopOfGrid($newconn,$studentid){
 }
 
 function addRow2JoinCourseTable($row){ #color for taken or not
-    if($color)
-        echo '<tr class="table-dark">';
-    else
-        echo '<tr>';
+    echo '<tr>';
     echo '<td>'.$row["CourseCode"].'</td>';
     echo '<td>'.$row["CourseName"].'</td>';
     echo '<td>'.$row["sectionID"].'</td>';

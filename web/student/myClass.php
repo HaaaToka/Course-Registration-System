@@ -5,9 +5,6 @@ include "../includer.php";
 $newconn = new ConnectDB($sn,$un,$pss,$db);
 
 
-
-
-
 printCreditOnTopOfGrid($newconn,$_SESSION['userid']);
 
 
@@ -46,11 +43,7 @@ printCreditOnTopOfGrid($newconn,$_SESSION['userid']);
 
             <?php
 
-                $allmycourse = takenCoursesbyMe($newconn->conn,$_SESSION['userid']);
-                $count=1;
-                foreach($allmycourse as $row){
-                    addRowToMyClassTable($row,$count++);
-                }
+                takenCoursesbyMe($newconn->conn,$_SESSION['userid']);
             ?>
 
                 </tbody>

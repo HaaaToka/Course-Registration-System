@@ -1,23 +1,8 @@
 <?php  
-//page=10&yyyy=2019&depid=41&tterm=Fall
-
-function isAlreadyTaken($takenCourses,$checkKlass){
-    $res=false;
-    foreach($takenCourses as $taken){
-        if($taken==$checkKlass){
-            
-            $res=true;
-            break;
-        }
-    }
-
-    return $res;
-}
-
 
 include_once "../database.php";
 include_once "../config.php";
-include_once "../function.php";
+include_once "../functions.php";
 
 $newconn = new ConnectDB($sn,$un,$pss,$db);
 
@@ -109,7 +94,7 @@ else{
     $total_pages = ceil($total_records/$record_per_page);  
     for($i=1; $i<=$total_pages; $i++)  
     {  
-        if($page==i){
+        if($page==$i){
             $output.='<li class="page-item disabled">
                         <a class="page-link" id='.$page.' tabindex="-1">'.$page.'</a>
                       </li>';
