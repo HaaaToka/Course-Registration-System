@@ -1,10 +1,10 @@
 <?php
 
-include_once "../base.html";
-include_once "../header.php";
+include_once "base.html";
+include_once "header.php";
 
-include_once "../functions.php";
-include_once "../database.php";
+include_once "functions.php";
+include_once "database.php";
 
 $message="";
 
@@ -35,7 +35,7 @@ if(isset($_POST['form'])){
             $row = $stmt->fetch();
             // echo print_r($row);
             if($row){
-                $message = 'Yuppiii! You are a student at OYT. <br> Your Student ID = '.$row['sid'].' Password='.$nname.$ssurname.'123 <br><a href="../login.php">Click Me To Log In</a>';
+                $message = 'Yuppiii! You are a student at OYT. <br> Your Student ID = '.$row['sid'].' Password='.$nname.$ssurname.'123 <br><a href="login.php">Click Me To Log In</a>';
             }
         }
         else{

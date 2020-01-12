@@ -43,7 +43,7 @@ printCreditOnTopOfGrid($newconn,$_SESSION['userid']);
 
             <?php
 
-                takenCoursesbyMe($newconn->conn,$_SESSION['userid']);
+                takenCoursesbyMe($newconn->conn,$_SESSION['userid'],0);
             ?>
 
                 </tbody>

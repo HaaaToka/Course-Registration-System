@@ -6,6 +6,12 @@ include_once "../functions.php";
 
 $newconn = new ConnectDB($sn,$un,$pss,$db);
 
+
+if(isset($_POST['reload'])){
+    $stuid=$_POST['reload'];
+    takenCoursesbyMe($newconn->conn,$stuid,1);
+}
+
 if(isset($_POST['function'])){
 
     $studentid="-1";
@@ -39,8 +45,11 @@ if(isset($_POST['function'])){
         }
         else{
             $stmt->execute();
-            echo $sql;
-            echo "You ".$_POST["function"]." the class";
+            $res=$stmt->fetch();
+            if($res['result']=="0")
+                echo "You did not ".$_POST["function"]." the class";
+            else
+                echo "You ".$_POST["function"]." the class";
         }
 
 }

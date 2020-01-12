@@ -6,15 +6,15 @@ include_once "../functions.php";
 
 $newconn = new ConnectDB($sn,$un,$pss,$db);
 
-$myklases=[];
+$myklases=takenCoursesbyMe($newconn->conn,$_POST['studentid'],2);
+//print_r($myklases);
 $searching = '-1';
 $record_per_page = 10;  
-$page = '';  
+$page = 1;  
 $output = '';  
+
 if(isset($_POST["page"]))
     $page = $_POST["page"];
-else
-    $page = 1;
 
 
 if(isset($_POST["cpp"]))
@@ -23,8 +23,6 @@ if(isset($_POST["cpp"]))
 if(isset($_POST["sc"]))
     $searching=$_POST["sc"];
 
-if(isset($_POST['myclasses']))
-    $myklases = $_POST['myclasses'];
 
 
 $start_from = ($page - 1)*$record_per_page; 

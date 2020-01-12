@@ -1,8 +1,8 @@
 <?php
 
 
-#$mainLocation = "/Course-Registration-System/web/";
-$mainLocation = "/dbms/";
+$mainLocation = "/Course-Registration-System/web/";
+#mainLocation = "/dbms/";
 $loglogin="okan";
 $passpassword="okan123";
 

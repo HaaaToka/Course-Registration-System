@@ -83,7 +83,21 @@ function isAlreadyTaken($takenCourses,$checkKlass){
 }
 
 
-function takenCoursesbyMe($connection,$myid){
+function takenCoursesbyMe($connection,$myid,$tblmy){
+    if($tblmy==1){
+        echo '<h1 class="display-6">Attended Classes</h1><table class="table table-hover"><thead>
+            <tr>
+            <th scope="col">Course Code</th>
+            <th scope="col">Course Name</th>
+            <th scope="col">Section Number</th>
+            <th scope="col"></th> 
+            <!-- buraya hoca ekle -->
+            <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>';
+    }
+
     $sqlTakenCourses="call OneStudentTookAllCourse(".$myid.")";
     $stmt=$connection->prepare($sqlTakenCourses);
     $stmt->execute();
@@ -91,11 +105,17 @@ function takenCoursesbyMe($connection,$myid){
     $classes=[];
     foreach($stmt as $tc){
         array_push($classes,$tc['classID']);
-        addRow2JoinCourseTable($tc);
+        if($tblmy!=2){
+            addRow2JoinCourseTable($tc);
+        }
     }
+    if($tblmy==1){
+        echo '</tbody>
+        </table>';
+    }
+
     return $classes;
 }
-
 
 
 ?>

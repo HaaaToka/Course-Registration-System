@@ -10,22 +10,7 @@ $newconn = new ConnectDB($sn,$un,$pss,$db);
 
 
 <div class="container" id="myattended">
-  <h1 class="display-6">Attended Classes</h1>
-  <table class="table table-hover">
-    <thead>
-        <tr>
-        <th scope="col">Course Code</th>
-        <th scope="col">Course Name</th>
-        <th scope="col">Section Number</th>
-        <th scope="col"></th> 
-        <!-- buraya hoca ekle -->
-        <th scope="col"></th>
-        </tr>
-    </thead>
-    <tbody> 
-      <?php $mycklasseslist=takenCoursesbyMe($newconn->conn,$_SESSION['userid']); ?>
-    </tbody>
-  </table>
+      <?php takenCoursesbyMe($newconn->conn,$_SESSION['userid'],1); ?>
 </div>
 
 <div class="container" id="pagination_data">
@@ -42,7 +27,7 @@ $newconn = new ConnectDB($sn,$un,$pss,$db);
       url:"pagination.php",
       type:"POST",
       data: {page:page,
-             myclasses:<?php echo json_encode($mycklasseslist)?>,
+             studentid:<?php echo $_SESSION['userid']?>,
              year:<?php echo $_SESSION['year']?>,
              term:'<?php echo $_SESSION['term']?>',
              depid:<?php echo $_SESSION['departmentID']?>,
@@ -64,6 +49,19 @@ $newconn = new ConnectDB($sn,$un,$pss,$db);
     
   }
 
+  function reload_data_mytaken(stuid){
+    $.ajax({
+      url:"api.php",
+      type:"POST",
+      data:{
+          reload:stuid
+      },
+      success:function(data){
+        document.getElementById('myattended').innerHTML=data;
+      }
+    });
+  }
+
   function delete_update_join_Class(functionName,stuid,klassid,secid){
     $.ajax({
       url:"api.php",
@@ -78,7 +76,9 @@ $newconn = new ConnectDB($sn,$un,$pss,$db);
         alert(data);
       },
       complete:function(){
-        document.location.reload(true);
+        reload_data_mytaken('<?php echo $_SESSION['userid'];?>');
+        load_data(1,document.getElementById("cpp").innerHTML,"-1");
+        // document.location.reload(true);
       }
     });
   }
