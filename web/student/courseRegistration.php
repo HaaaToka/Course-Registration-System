@@ -21,7 +21,7 @@ $newconn = new ConnectDB($sn,$un,$pss,$db);
 <script>  
  $(document).ready(function(){  
 
-  load_data(1,10,"");
+  load_data(1,10,"-1");
   function load_data(page,coursePerPage,searchCourse){
     $.ajax({
       url:"pagination.php",
@@ -87,7 +87,8 @@ $newconn = new ConnectDB($sn,$un,$pss,$db);
   $(document).on('click','.page-link',function(){
       var page=$(this).attr("id");
       var coursePerPage = document.getElementById("cpp").innerHTML;
-      load_data(page,coursePerPage,"-1");
+      var searchcourse = document.getElementById("search").value;
+      load_data(page,coursePerPage,searchcourse);
   });
 
   $(document).on('click','.dropdown-item',function(){

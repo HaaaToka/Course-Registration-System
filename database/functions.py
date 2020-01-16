@@ -726,4 +726,25 @@ def student2klass(dbCon):
         cursor.execute()
 
 def instructor2klass(dbCon):
-    return 1
+    
+    with dbCon.cursor() as cursor:
+        cursor.execute("select count(*) from Department")
+        depCount = cursor.fetchall()[0][0]+1
+        #print(depCount)  joincourseclasssection
+
+        for i in range(1,depCount+1):
+            cursor.execute("select * from Instructor where departmentID="+str(i))
+            instructorsFrom_ithDep =  cursor.fetchall() #0 insid
+            lni=len(instructorsFrom_ithDep)
+
+            cursor.execute("select * from joincourseclasssection where departmentID="+str(i))
+            courses_ithDep = cursor.fetchall()# 5->klass 8->section
+            lnc=len(courses_ithDep)
+            
+            sql2matchinstructorandsection="call insertInstructorGivesCourse(%d,%d,%d)"
+            for k in range(lnc):
+                cursor.execute(sql2matchinstructorandsection%(instructorsFrom_ithDep[k%lni][0],courses_ithDep[k][5],courses_ithDep[k][8]))
+
+            print(i)
+    
+    dbCon.commit()

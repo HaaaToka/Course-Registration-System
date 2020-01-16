@@ -32,7 +32,7 @@ if($searching=="-1"){
     $page_query = "SELECT count(*) as coc FROM joincourseclasssection where year=".$_POST['year']." and term='".$_POST['term']."' and departmentID=".$_POST['depid']; 
 }
 else{
-    $sqldepcour="SELECT * FROM (SELECT * FROM joincourseclasssection where year=".$_POST['year']." and term='".$_POST['term']."' and departmentID=".$_POST['depid']." order by courseID DESC limit ".$start_from.",".$record_per_page.") as tbl where CourseCode LIKE '%".$searching."%' or CourseName LIKE '%".$searching."%'";
+    $sqldepcour="SELECT * FROM (SELECT * FROM joincourseclasssection where year=".$_POST['year']." and term='".$_POST['term']."' and departmentID=".$_POST['depid']." order by courseID DESC ) as tbl where CourseCode LIKE '%".$searching."%' or CourseName LIKE '%".$searching."%' limit ".$start_from.",".$record_per_page."";
     $page_query = "SELECT count(*) as coc FROM joincourseclasssection where year=".$_POST['year']." and term='".$_POST['term']."' and departmentID=".$_POST['depid']." and (CourseCode LIKE '%".$searching."%' or CourseName LIKE '%".$searching."%')"; 
 }
 $stmt = $newconn->conn->prepare($sqldepcour);
