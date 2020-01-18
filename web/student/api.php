@@ -6,6 +6,9 @@ include_once "../functions.php";
 
 $newconn = new ConnectDB($sn,$un,$pss,$db);
 
+if(isset($_POST["gimmeRemainingCredit"])){
+    printCreditOnTopOfGrid($newconn,$_POST['studentid']);
+}
 
 if(isset($_POST['reload'])){
     $stuid=$_POST['reload'];

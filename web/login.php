@@ -21,11 +21,11 @@ if(isset($_POST['form'])){
 
     if($_POST['role']=='student'){
         $sql = "SELECT * FROM UsersStudent WHERE userid='$userid'AND password='$password'";
-        $sqlDep = "Select departmentID from Student where studentID=$userid";
+        $sqlDep = "Select * from Student where studentID=$userid";
     }
     else{
         $sql = "SELECT * FROM UsersInstructor WHERE userid='$userid'AND password='$password'";
-        $sqlDep="Select departmentID from Instructor where instructorID=$userid";
+        $sqlDep="Select * from Instructor where instructorID=$userid";
     }
     $stmt = $newconn->conn->prepare($sql);
 
@@ -53,6 +53,8 @@ if(isset($_POST['form'])){
                 $row2 = $stmt->fetch();
                 print_r($row2);
                 $_SESSION['departmentID'] = $row2['departmentID'];
+                $_SESSION['name']=$row2['name'];
+                $_SESSION['surname']=$row2['surname'];
 
                 $_SESSION["token"] = $token;
                 ?> <script>window.location="index.php"</script> <?php

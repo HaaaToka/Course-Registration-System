@@ -4,12 +4,13 @@ include "../includer.php";
 
 $newconn = new ConnectDB($sn,$un,$pss,$db);
 
-
-printCreditOnTopOfGrid($newconn,$_SESSION['userid']);
-
-
 ?>
 
+<div id="topOfCredit">
+    <?php
+        printCreditOnTopOfGrid($newconn,$_SESSION['userid']);
+    ?>
+</div>
 
 
 <div class="container">
@@ -26,28 +27,10 @@ printCreditOnTopOfGrid($newconn,$_SESSION['userid']);
 
         <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#classes">
             <div class="card-body">
-    
 
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Course Code</th>
-                    <th scope="col">Course Name</th>
-                    <th scope="col">Course Credit</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-
-
-            <?php
-
-                takenCoursesbyMe($newconn->conn,$_SESSION['userid'],0);
-            ?>
-
-                </tbody>
-                </table>
+            <div class="container" id="myattended">
+                <?php takenCoursesbyMe($newconn->conn,$_SESSION['userid'],1); ?>
+            </div>
 
             </div>
         </div>
@@ -65,12 +48,11 @@ printCreditOnTopOfGrid($newconn,$_SESSION['userid']);
             </div>
 
             <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#schedule">
-            <div class="card-body">
+                <div class="card-body" id="cardbody">
 
+                    <?php generateSchedule($newconn->conn,$_SESSION["userid"]); ?>
 
-
-
-            </div>
+                </div>
             </div>
         </div>
     </div>
@@ -79,25 +61,78 @@ printCreditOnTopOfGrid($newconn,$_SESSION['userid']);
 
 </div>
 
+
+
+
 <script>
+document.getElementById("attendedHeader").style.display = 'none';
 
+function refresh_remaining_credit(){
+    $.ajax({
+        url:"api.php",
+        type:"POST",
+        data:{
+            gimmeRemainingCredit:"hands up (give me your hearth)",
+            studentid:<?php echo $_SESSION['userid']?>
+        },
+        success:function(data){
+            document.getElementById("topOfCredit").innerHTML=data;
+        }
+    });
+}
 
+function reload_data_mytaken(stuid){
+    $.ajax({
+      url:"api.php",
+      type:"POST",
+      data:{
+          reload:stuid
+      },
+      success:function(data){
+        document.getElementById('myattended').innerHTML=data;
+        document.getElementById("attendedHeader").style.display = 'none';
+        //refresh_remaining_credit();
+        document.location.reload(true);
+      }
+    });
+  }
 
+  function delete_update_join_Class(functionName,stuid,klassid,secid){
+    $.ajax({
+      url:"api.php",
+      type:"POST",
+      data:{
+              function:functionName,
+              studentid:stuid,
+              classid:klassid,
+              sectionid:secid
+      },
+      success:function(data){
+        alert(data);
+      },
+      complete:function(){
+        reload_data_mytaken('<?php echo $_SESSION['userid'];?>');
+        load_data(1,document.getElementById("cpp").innerHTML,"-1");
+      }
+    });
+  }
+
+  $(document).on('click','.btn-danger',function(){
+      var cid=$(this).attr("classid");
+      var sid=$(this).attr("sectionid");
+      var uid='<?php echo $_SESSION['userid']?>';
+      console.log("delete",cid,sid,uid);
+      if (window.confirm('Are you sure you want to drop this class?')) {
+        delete_update_join_Class("delete",uid,cid,sid);
+      }
+  });
 </script>
+
 
 
 
 <?php
 
-$mon = array("09:00:00"=>"","10:00:00"=>"","11:00:00"=>"","12:00:00"=>"","13:00:00"=>"","14:00:00"=>"","15:00:00"=>"","16:00:00"=>"","17:00:00"=>"");
-$tue = array("09:00:00"=>"","10:00:00"=>"","11:00:00"=>"","12:00:00"=>"","13:00:00"=>"","14:00:00"=>"","15:00:00"=>"","16:00:00"=>"","17:00:00"=>"");
-$wen = array("09:00:00"=>"","10:00:00"=>"","11:00:00"=>"","12:00:00"=>"","13:00:00"=>"","14:00:00"=>"","15:00:00"=>"","16:00:00"=>"","17:00:00"=>"");
-$thu = array("09:00:00"=>"","10:00:00"=>"","11:00:00"=>"","12:00:00"=>"","13:00:00"=>"","14:00:00"=>"","15:00:00"=>"","16:00:00"=>"","17:00:00"=>"");
-$fri = array("09:00:00"=>"","10:00:00"=>"","11:00:00"=>"","12:00:00"=>"","13:00:00"=>"","14:00:00"=>"","15:00:00"=>"","16:00:00"=>"","17:00:00"=>"");
-
-
-
-generateSchedule($newconn->conn,$_SESSION["userid"]);
 $newconn->disconnectServer();
 
 ?>
