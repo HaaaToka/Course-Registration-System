@@ -748,3 +748,19 @@ def instructor2klass(dbCon):
             print(i)
     
     dbCon.commit()
+
+
+def fillcollectedCreditsGrades(dbCon):
+
+    with dbCon.cursor() as cursor:
+        cursor.execute("select studentID from Student")
+        stuNos=cursor.fetchall()
+        #print(stuNos)
+
+        sql="UPDATE Student SET collectedCredits = 0, collectedGrade = 0 WHERE (studentID = %s)"
+        for stuid in stuNos:
+            cursor.execute(sql%stuid[0])
+            #print(sql%stuid[0])
+            print(stuid[0])
+            
+    dbCon.commit()

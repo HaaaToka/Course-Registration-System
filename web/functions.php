@@ -19,6 +19,44 @@ function sqli_check_1($data)
     
 }
 
+function file_upload_check($file, $file_extensions  = array("jpeg", "jpg", "png", "gif"), $target_dir = "../media/")
+{
+    
+    $error = "";
+    
+    $imageFileType = strtolower(pathinfo(basename($file["name"]),PATHINFO_EXTENSION));
+    $target_file = $target_dir .$_SESSION['userid'].".png";
+
+    echo $target_file."-------------".$imageFileType."-------------";
+
+    $check = getimagesize($file["tmp_name"]);
+    if($check == false) {
+        $error = "File is not an image.";
+    }
+    // Check if file already exists
+    if (file_exists($target_file)) {
+        # $error = "Sorry, file already exists.";
+        if (!unlink($target_file)){
+            $error = "Error deleting ";
+        }
+    }
+    // Check file size
+    if ($file["size"] > 500000) {
+        $error = "Sorry, your file is too large.";
+    }
+    // Allow certain file formats
+    if($imageFileType != "png")  {
+        $error = "Sorry, only PNG files are allowed.";
+    }
+    // Check if $uploadOk is set to 0 by an error
+    if ($uploadOk != "") {
+        $error .= "Sorry, your file was not uploaded.";
+    }
+    
+    return $error;
+    
+}
+
 
 function addRowToMyClassTable($row,$count){
     echo "<tr>";
@@ -202,15 +240,6 @@ function generateSchedule($connection,$myid){
         if($row['day2']!=""){
             $week=mergeHourCourse($week,$row["day2"],$row["startTime2"],$row["endTime2"],$row["CourseCode"]);
         }
-        // echo "<tr>
-        //         <td>1</td>
-        //         <td>Mark<br>hello</td>
-        //         <td>Otto</td>
-        //         <td>@mdo</td>
-        //         <td>Mark</td>
-        //         <td>Otto</td>
-        //         <td>@mdo</td>
-        //     </tr>";
     }    
 
     $hours=array("09:00:00","10:00:00","11:00:00","12:00:00","13:00:00","14:00:00","15:00:00","16:00:00","17:00:00");
