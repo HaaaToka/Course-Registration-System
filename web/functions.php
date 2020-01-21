@@ -27,7 +27,7 @@ function file_upload_check($file, $file_extensions  = array("jpeg", "jpg", "png"
     $imageFileType = strtolower(pathinfo(basename($file["name"]),PATHINFO_EXTENSION));
     $target_file = $target_dir .$_SESSION['userid'].".png";
 
-    echo $target_file."-------------".$imageFileType."-------------";
+    // echo $target_file."-------------".$imageFileType."-------------";
 
     $check = getimagesize($file["tmp_name"]);
     if($check == false) {

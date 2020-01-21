@@ -45,8 +45,8 @@ if(isset($_POST['form'])){
                 $_SESSION["login"] = "true";
                 $_SESSION["userid"]=$row['userid'];
                 $_SESSION["role"]=$_POST['role'];
-                $_SESSION["term"]="Fall";
-                $_SESSION["year"]=2019;
+                $_SESSION["term"]=$term;
+                $_SESSION["year"]=$year;
 
                 $stmt=$newconn->conn->prepare($sqlDep);
                 $stmt->execute();

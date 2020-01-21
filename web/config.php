@@ -1,5 +1,7 @@
 <?php
 
+$term = "Fall";
+$year = 2019;
 
 $mainLocation = "/Course-Registration-System/web/";
 #mainLocation = "/dbms/";
