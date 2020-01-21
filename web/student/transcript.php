@@ -25,22 +25,32 @@ function letterGradeChanger($letterNote){
         return 0.00;
 }
 
+function helperHeader($term,$year){
+        
+        if($term == "Fall"){
+            echo '<span style="font-size:125%" class="badge badge-primary">'.$year."-".($year+1)." Spring Semester</span>";
+        }
+        else{
+            echo '<span style="font-size:125%" class="badge badge-secondary">'.$year."-".($year+1)." Fall Semester</span>";
+        }
+}
+
+function helperGPA($sg,$g,$sc,$c){
+    echo '<tr><td colspan="2"><font color="red">Semester GPA: </font>'.number_format($sg/$sc, 2, '.', ',').'</td>';
+    echo '<td colspan=3><font color="red">General GPA:</font> '.number_format($g/$c, 2, '.', ',').'</td></tr><br>';
+    echo "</tbody></table>";
+}
+
 function semesterGPA($sg,$g,$sc,$c,$term,$year){
 
     // spring 2017 -> 2016-2017 yilinin springi
     // fall 2017 -> 2017-2018 yiklinin falli
     if($term!=""){
-        echo '<tr><td colspan="2"><font color="red">Semester GPA: </font>'.number_format($sg/$sc, 2, '.', ',').'</td>';
-        echo '<td colspan=3><font color="red">General GPA:</font> '.number_format($g/$c, 2, '.', ',').'</td></tr><br>';
-        echo "</tbody></table>";
+
+        helperGPA($sg,$g,$sc,$c);
 
         //sonraki tablonun basligi ileri dusun
-        if($term == "Fall"){
-            echo $year."-".($year+1)." Spring Semester";
-        }
-        else{
-            echo ($year)."-".($year+1)." Fall Semester";
-        }
+        helperHeader($term,$year);
         
     }
 
@@ -84,6 +94,7 @@ function generateTranscript($allKlass){
     $semesterGrade=0;
     $semesterKlassCount=0;
 
+    
     foreach($allKlass as $klass){
 
         if( semesterChanger($klass["term"],$prevTerm,$klass["year"],$prevYear) == 1 ){
@@ -105,6 +116,8 @@ function generateTranscript($allKlass){
         printKlass($klass,$semesterKlassCount);
 
     }
+
+    helperGPA($semesterGrade,$totalGrade,$semesterCredits,$totalCredits);
     
 }
 
@@ -114,14 +127,15 @@ $newconn = new ConnectDB($sn,$un,$pss,$db);
 $stmt = $newconn->conn->prepare("call getMyTranscript(".$_SESSION["userid"].")");
 $stmt->execute();
 $gradeKlass = $stmt->fetchall();
-
 //print_r($gradeKlass);
+
+//print_r($_SESSION);
 
 ?>
 
+
 <div class="container">
     <h1 class="display-3" align="center">Hello How Are You, <?php  echo $_SESSION['name']." ".$_SESSION['surname'];?></h1>
-    buraya basalangıc yılını yaz
-    <?php generateTranscript($gradeKlass); ?>
+    <?php helperHeader("Spring",$_SESSION['startyear']); generateTranscript($gradeKlass); ?>
 
 </div>

@@ -143,7 +143,7 @@ if(isset($_POST["submit"])) {
                                         <label>GPA</label>
                                     </div>
                                     <div class="col-md-6">
-                                        <p><?php echo $who["collectedGrade"]/$who["collectedCredits"]?></p>
+                                        <p><?php echo number_format($who["collectedGrade"]/$who["collectedCredits"], 2, '.', ',')?></p>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -151,7 +151,7 @@ if(isset($_POST["submit"])) {
                                         <label>Transcript</label>
                                     </div>
                                     <div class="col-md-6">
-                                        <p><a href="transcript.php"> Click me to look it </a></p>
+                                        <p><a href="transcript.php" class="badge badge-warning">Click Me To Look Transcript</a></p>
                                     </div>
                                 </div>
                             </div>

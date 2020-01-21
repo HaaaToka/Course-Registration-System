@@ -55,6 +55,7 @@ if(isset($_POST['form'])){
                 $_SESSION['departmentID'] = $row2['departmentID'];
                 $_SESSION['name']=$row2['name'];
                 $_SESSION['surname']=$row2['surname'];
+                $_SESSION["startyear"]=$row2['startYear'];
 
                 $_SESSION["token"] = $token;
                 ?> <script>window.location="index.php"</script> <?php

@@ -44,6 +44,10 @@
         
 <?php
 
+if(strpos($_SERVER['REQUEST_URI'],"transcript.php")){
+    echo '<button type="button" class="btn btn-danger" onClick="window.print()">Print this page</button>';
+}
+
             if(isset($_SESSION['login'])){
 ?>
             <input type="button" value="LOGOUT" onclick="window.location.href='<?php echo $mainLocation;?>logout.php'">
