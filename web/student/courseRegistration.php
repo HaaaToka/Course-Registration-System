@@ -22,7 +22,7 @@ $newconn = new ConnectDB($sn,$un,$pss,$db);
  $(document).ready(function(){  
 
   load_data(1,10,"-1");
-  function load_data(page,coursePerPage,searchCourse){
+  function load_data(page,coursePerPage,searchCourse,filter){
     $.ajax({
       url:"pagination.php",
       type:"POST",
@@ -31,6 +31,7 @@ $newconn = new ConnectDB($sn,$un,$pss,$db);
              year:<?php echo $_SESSION['year']?>,
              term:'<?php echo $_SESSION['term']?>',
              depid:<?php echo $_SESSION['departmentID']?>,
+             filteryear:filter,
              cpp:coursePerPage,
              sc:searchCourse},
       success:function(data){
@@ -76,8 +77,9 @@ $newconn = new ConnectDB($sn,$un,$pss,$db);
         alert(data);
       },
       complete:function(){
+        var filter=document.getElementById('filteryear').innerHTML;
         reload_data_mytaken('<?php echo $_SESSION['userid'];?>');
-        load_data(1,document.getElementById("cpp").innerHTML,"-1");
+        load_data(1,document.getElementById("cpp").innerHTML,"-1",filter);
         // document.location.reload(true);
       }
     });
@@ -88,18 +90,22 @@ $newconn = new ConnectDB($sn,$un,$pss,$db);
       var page=$(this).attr("id");
       var coursePerPage = document.getElementById("cpp").innerHTML;
       var searchcourse = document.getElementById("search").value;
-      load_data(page,coursePerPage,searchcourse);
+      var filter=document.getElementById('filteryear').innerHTML;
+      load_data(page,coursePerPage,searchcourse,filter);
   });
 
   $(document).on('click','.dropdown-item',function(){
+      var searchcourse = document.getElementById("search").value;
       var coursePerPage=$(this).attr("id");
-      load_data(1,coursePerPage,"-1");
+      var filter=document.getElementById('filteryear').innerHTML;
+      load_data(1,coursePerPage,searchcourse,filter);
   });
 
   $(document).on('click','.btn-outline-secondary',function(){
       var searchcourse = document.getElementById("search").value;
       var coursePerPage = document.getElementById("cpp").innerHTML;
-      load_data(1,coursePerPage,searchcourse);  
+      var filter=document.getElementById('filteryear').innerHTML;
+      load_data(1,coursePerPage,searchcourse,filter);  
   });
 
   $(document).on('click','.btn-success',function(){
@@ -132,6 +138,13 @@ $newconn = new ConnectDB($sn,$un,$pss,$db);
       }
   });
   
+  $(document).on('click','.btn-outline-primary',function(){
+    var searchcourse = document.getElementById("search").value;
+    var coursePerPage = document.getElementById("cpp").innerHTML;
+    var filter=$(this).attr("year");
+    load_data(1,coursePerPage,searchcourse,filter);
+  });
+
 
  });  
  </script>  

@@ -130,12 +130,60 @@ $gradeKlass = $stmt->fetchall();
 //print_r($gradeKlass);
 
 //print_r($_SESSION);
+$newconn->disconnectServer();
+
+$newconn2=new ConnectDB($sn,$un,$pss,$db);
+$stmt2 = $newconn2->conn->prepare("select * from joinstudentdepartmentfaculty where studentID=".$_SESSION['userid']);
+$stmt2->execute();
+$who = $stmt2->fetch();
+//print_r($who);
 
 ?>
 
 
-<div class="container">
-    <h1 class="display-3" align="center">Hello How Are You, <?php  echo $_SESSION['name']." ".$_SESSION['surname'];?></h1>
-    <?php helperHeader("Spring",$_SESSION['startyear']); generateTranscript($gradeKlass); ?>
 
+<div class="container">
+    <h1 align="center" class="display-3">TRANSCRIPT</h1>
+    <div class="row justify-content-center">
+        <div class="col-4">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th scope="row">Student No</th>
+                        <td><?php echo $who['studentID']?></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Surname, Name</th>
+                        <td><?php echo $who['studentSurname'].", ".$who['studentName']?></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Start Year</th>
+                        <td><?php echo $who['startYear']?></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-4">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th scope="row">Faculty</th>
+                        <td><?php echo $who['facultyName']?></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Department</th>
+                        <td><?php echo $who['departmentName']?></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">GPA</th>
+                        <td><?php echo number_format($who["collectedGrade"]/$who["collectedCredits"], 2, '.', ',')?></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <?php helperHeader("Spring",$_SESSION['startyear']); generateTranscript($gradeKlass); ?>
 </div>

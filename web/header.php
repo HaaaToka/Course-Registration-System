@@ -13,7 +13,7 @@
         <ul class="navbar-nav mr-auto">
 
             <li class="nav-item">
-                <a class="nav-link" href="<?php echo $mainLocation;?>media/img/hackDatabase.png">Link</a>
+                <a class="badge-danger nav-link" href="<?php echo $mainLocation;?>media/img/hackDatabase.png">-_-</a>
             </li>
 <?php if(isset($_SESSION["login"])){?>
             <li class="nav-item dropdown">
@@ -25,6 +25,7 @@
                     <?php if($_SESSION["role"]=="student"){?>  
                         <a href="<?php echo $mainLocation;?>student/myClass.php" class="dropdown-item">My Classes</a>
                         <a href="<?php echo $mainLocation;?>student/myProfile.php" class="dropdown-item">My Profile</a>
+                        <a href="<?php echo $mainLocation;?>student/transcript.php" class="dropdown-item">My Transcript</a>
                         <a href="<?php echo $mainLocation;?>student/courseRegistration.php" class="dropdown-item">Course Registration</a>  
                     <?php }elseif($_SESSION["role"]=="instructor"){?>
                         <a href="<?php echo $mainLocation;?>instructor/myClass.php" class="dropdown-item">My Classes</a>
@@ -33,30 +34,28 @@
                 </div>
             </li>
             <li class="nav-item" >
-        <div id="person">
-            <font color="orange"> <label>Welcome : <?php echo $_SESSION["userid"]?></label> </font> <br />
-        </div>  
-<?php } ?>
+                <span class="badge badge-light">Welcome : <?php echo $_SESSION["userid"]?></span>
             </li>
+<?php } ?>          
         </ul>
 
         <div id="loginout">
         
 <?php
 
-if(strpos($_SERVER['REQUEST_URI'],"transcript.php")){
-    echo '<button type="button" class="btn btn-danger" onClick="window.print()">Print this page</button>';
+if(strpos($_SERVER['REQUEST_URI'],"transcript.php") || strpos($_SERVER['REQUEST_URI'],"myClass.php")){
+    echo '<button type="button" class="btn btn-warning" onClick="window.print()">Print this page</button>';
 }
 
             if(isset($_SESSION['login'])){
-?>
-            <input type="button" value="LOGOUT" onclick="window.location.href='<?php echo $mainLocation;?>logout.php'">
-<?php
+
+             echo '<button type="button" class="btn btn-dark" onClick="window.location.href=\''.$mainLocation.'logout.php\'">LOGOUT</button>';
+
             }
             else{
-?>
-            <input type="button" value="LOGIN" onclick="window.location.href='<?php echo $mainLocation;?>login.php'">
-<?php
+
+            echo '<button type="button" class="btn btn-ligth" onClick="window.location.href=\''.$mainLocation.'login.php\'">LOGIN</button>';
+
             }
 ?>
 

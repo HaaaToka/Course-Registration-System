@@ -1,5 +1,28 @@
 <?php  
 
+function badger($seq){
+    $res="";
+    $inner="";
+    if($seq==5){
+        $inner = "ALL";
+    }
+    else{
+        $inner=$seq.' Year';
+    }
+    for($i=1;$i<6;$i++){
+        if($i == $seq){
+            $res.='<button type="button" class="btn btn-primary" id="filteryear">'.$inner.'</button>';
+        }
+        else{
+            if($i == 5)
+                $res.='<button type="button" class="btn btn-outline-primary" year="ALL">ALL</button>';
+            else
+                $res.='<button type="button" class="btn btn-outline-primary" year="'.$i.'year">'.$i.'. Year</button>';
+        }
+    }
+    return $res;
+}
+
 include_once "../database.php";
 include_once "../config.php";
 include_once "../functions.php";
@@ -11,7 +34,9 @@ $myklases=takenCoursesbyMe($newconn->conn,$_POST['studentid'],2);
 $searching = '-1';
 $record_per_page = 10;  
 $page = 1;  
-$output = '';  
+$output = ''; 
+$filterYear=5;
+$filterchar="%";
 
 if(isset($_POST["page"]))
     $page = $_POST["page"];
@@ -23,17 +48,26 @@ if(isset($_POST["cpp"]))
 if(isset($_POST["sc"]))
     $searching=$_POST["sc"];
 
-
+if(isset($_POST["filteryear"])){
+    if(strpos("1234",$_POST["filteryear"][0])!==false){
+        $filterYear=$_POST["filteryear"][0];
+        $filterchar=$_POST["filteryear"][0];
+    }
+    else{
+        $filterYear=5;
+    }
+}
+    
 
 $start_from = ($page - 1)*$record_per_page; 
 
 if($searching=="-1"){
-    $sqldepcour="SELECT * FROM joincourseclasssection where year=".$_POST['year']." and term='".$_POST['term']."' and departmentID=".$_POST['depid']." order by courseID DESC limit ".$start_from.",".$record_per_page;
-    $page_query = "SELECT count(*) as coc FROM joincourseclasssection where year=".$_POST['year']." and term='".$_POST['term']."' and departmentID=".$_POST['depid']; 
+    $sqldepcour="SELECT * FROM joincourseclasssection where year=".$_POST['year']." and term='".$_POST['term']."' and departmentID=".$_POST['depid']." and CourseCode LIKE '___".$filterchar."%' order by CourseCode ASC limit ".$start_from.",".$record_per_page;
+    $page_query = "SELECT count(*) as coc FROM joincourseclasssection where year=".$_POST['year']." and term='".$_POST['term']."' and departmentID=".$_POST['depid']." and CourseCode LIKE '___".$filterchar."%'"; 
 }
 else{
-    $sqldepcour="SELECT * FROM (SELECT * FROM joincourseclasssection where year=".$_POST['year']." and term='".$_POST['term']."' and departmentID=".$_POST['depid']." order by courseID DESC ) as tbl where CourseCode LIKE '%".$searching."%' or CourseName LIKE '%".$searching."%' limit ".$start_from.",".$record_per_page."";
-    $page_query = "SELECT count(*) as coc FROM joincourseclasssection where year=".$_POST['year']." and term='".$_POST['term']."' and departmentID=".$_POST['depid']." and (CourseCode LIKE '%".$searching."%' or CourseName LIKE '%".$searching."%')"; 
+    $sqldepcour="SELECT * FROM (SELECT * FROM joincourseclasssection where year=".$_POST['year']." and term='".$_POST['term']."' and departmentID=".$_POST['depid']." order by CourseCode ASC ) as tbl where (CourseCode LIKE '%".$searching."%' or CourseName LIKE '%".$searching."%') and CourseCode LIKE '___".$filterchar."%' limit ".$start_from.",".$record_per_page."";
+    $page_query = "SELECT count(*) as coc FROM joincourseclasssection where year=".$_POST['year']." and term='".$_POST['term']."' and departmentID=".$_POST['depid']." and (CourseCode LIKE '%".$searching."%' or CourseName LIKE '%".$searching."%') and CourseCode LIKE '___".$filterchar."%'"; 
 }
 $stmt = $newconn->conn->prepare($sqldepcour);
 
@@ -48,8 +82,11 @@ else{
                     <button class="btn btn-outline-secondary" type="button">Search</button>
                 </div>
                 <input type="text" id="search" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
-            </div>
-            <table class="table table-hover">
+            </div>';
+
+    $output.=badger($filterYear);
+
+    $output.= '<br><table class="table table-hover">
                 <thead>
                     <tr>
                     <th scope="col">Course Code</th>
