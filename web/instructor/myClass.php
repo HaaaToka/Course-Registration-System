@@ -5,6 +5,7 @@ function addRow2GivenCourseTable($klass){
             <td>'.$klass['CourseCode'].'</td>        
             <td>'.$klass['CourseName'].'</td>
             <td>'.$klass['sectionID'].'</td>
+            <td align="center"><a href="lookClass.php?cid='.$klass['classID'].'&sid='.$klass['sectionID'].'" class="badge badge-info">!</a></td>
     </tr>';
 }
 
@@ -16,6 +17,7 @@ function givenCoursesbyMe($conn,$insid,$year,$semester){
                     <th scope="col">Course Code</th>
                     <th scope="col">Course Name</th>
                     <th scope="col">Section Number</th>
+                    <th scope="col">View</th>
                 </tr>
             </thead>
             <tbody>';

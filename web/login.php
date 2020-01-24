@@ -14,7 +14,7 @@ $newconn = new ConnectDB($sn,$un,$pss,$db);
 $message = "";
 
 if(isset($_POST['form'])){
-    print_r($_POST);    
+    #print_r($_POST);    
     $userid = $_POST['userid'];
     $password = $_POST['password'];
     #$password =  hash("sha1",$_POST['password'],false);
