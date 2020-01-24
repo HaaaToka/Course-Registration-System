@@ -26,7 +26,8 @@ DB = pymysql.connect(host='167.71.66.201',
 # deletecs(DB)
 # instructor2klass(DB)
 # fillcollectedCreditsGrades(DB)
-
+# matchStudentAdvisor(DB)
+fillGraduation(DB)
 
 
 

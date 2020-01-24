@@ -19,7 +19,7 @@ function sqli_check_1($data)
     
 }
 
-function file_upload_check($file, $file_extensions  = array("jpeg", "jpg", "png", "gif"), $target_dir = "../media/")
+function file_upload_check($file, $file_extensions  = array("jpeg", "jpg", "png", "gif"), $target_dir)
 {
     
     $error = "";
@@ -27,32 +27,31 @@ function file_upload_check($file, $file_extensions  = array("jpeg", "jpg", "png"
     $imageFileType = strtolower(pathinfo(basename($file["name"]),PATHINFO_EXTENSION));
     $target_file = $target_dir .$_SESSION['userid'].".png";
 
-    // echo $target_file."-------------".$imageFileType."-------------";
+    echo "----->>".$target_file."-------------".$imageFileType."-------------";
 
     $check = getimagesize($file["tmp_name"]);
     if($check == false) {
-        $error = "File is not an image.";
+        return "File is not an image.";
     }
+
+    // Allow certain file formats
+    if($imageFileType != "png" && $imageFileType != "jpg")  {
+        return "Sorry, only PNG,JPG files are allowed.";
+    }
+
     // Check if file already exists
     if (file_exists($target_file)) {
         # $error = "Sorry, file already exists.";
+        echo $target_file;
         if (!unlink($target_file)){
-            $error = "Error deleting ";
+            return"Error deleting ";
         }
     }
     // Check file size
     if ($file["size"] > 500000) {
-        $error = "Sorry, your file is too large.";
+        return "Sorry, your file is too large.";
     }
-    // Allow certain file formats
-    if($imageFileType != "png")  {
-        $error = "Sorry, only PNG files are allowed.";
-    }
-    // Check if $uploadOk is set to 0 by an error
-    if ($uploadOk != "") {
-        $error .= "Sorry, your file was not uploaded.";
-    }
-    
+
     return $error;
     
 }
@@ -122,18 +121,19 @@ function isAlreadyTaken($takenCourses,$checkKlass){
 
 function takenCoursesbyMe($connection,$myid,$tblmy){
     if($tblmy==1){
-        echo '<h1 class="display-6" id="attendedHeader">Attended Classes</h1><table class="table table-hover">
-        <thead>
-            <tr>
-            <th scope="col">Course Code</th>
-            <th scope="col">Course Name</th>
-            <th scope="col">Section Number</th>
-            <th scope="col"></th> 
-            <!-- buraya hoca ekle -->
-            <th scope="col"></th>
-            </tr>
-        </thead>
-        <tbody>';
+        echo '<h1 class="display-6" id="attendedHeader">Attended Classes</h1>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                <th scope="col">Course Code</th>
+                <th scope="col">Course Name</th>
+                <th scope="col">Section Number</th>
+                <th scope="col"></th> 
+                <!-- buraya hoca ekle -->
+                <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>';
     }
 
     $sqlTakenCourses="call OneStudentTookAllCourse(".$myid.")";
@@ -208,7 +208,7 @@ function mergeHourCourse($wwww,$day,$start,$finish,$code){
     return $wwww;
 }
 
-function generateSchedule($connection,$myid){
+function generateSchedule($connection,$role,$myid,$year,$term){
 
     $mon = array("09:00:00"=>array(),"10:00:00"=>array(),"11:00:00"=>array(),"12:00:00"=>array(),"13:00:00"=>array(),"14:00:00"=>array(),"15:00:00"=>array(),"16:00:00"=>array(),"17:00:00"=>array());
     $tue = array("09:00:00"=>array(),"10:00:00"=>array(),"11:00:00"=>array(),"12:00:00"=>array(),"13:00:00"=>array(),"14:00:00"=>array(),"15:00:00"=>array(),"16:00:00"=>array(),"17:00:00"=>array());
@@ -230,7 +230,13 @@ function generateSchedule($connection,$myid){
         </thead>
         <tbody>
     ';
-    $sqlTakenCourses="call OneStudentTookAllCourse(".$myid.")";
+    if($role=='instructor'){
+        $sqlTakenCourses="call OneInstructorAllClassesInSemester(".$myid.",".$year.",'".$term."')";
+    }
+    else if($role == 'student'){
+        $sqlTakenCourses="call OneStudentTookAllCourse(".$myid.")";
+    }
+    
     $stmt=$connection->prepare($sqlTakenCourses);
     $stmt->execute();
     $stc=$stmt->fetchall();
@@ -265,5 +271,6 @@ function generateSchedule($connection,$myid){
     </table>';
 
 }
+
 
 ?>

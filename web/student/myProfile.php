@@ -11,13 +11,14 @@ $who = $stmt->fetch();
 
 if(isset($_POST["submit"])) {
 
-    $target_dir ="../media/pp/";
+    $target_dir ="../media/pp/stu/";
     $error = file_upload_check($_FILES["fileToUpload"],array("png"),$target_dir);
 
     if($error == ""){
         $target_file = $target_dir .$_SESSION['userid'].".png";
         if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
             $error = "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.";
+            header("Refresh:0");
         } else {
             $error = "Sorry, there was an error uploading your file.";
         }
@@ -44,7 +45,7 @@ if(isset($_POST["submit"])) {
         <div class="col-3">
             <div class="col-md-12 col-md-12-sm-12 col-xs-12 user-image text-center">
                 <img width="200" height="200"
-                    src="<?php echo $mainLocation;?>media/pp/<?php echo $_SESSION["userid"]?>.png"
+                    src="<?php echo $mainLocation;?>media/pp/stu/<?php echo $_SESSION["userid"]?>.png"
                     class="rounded-circle">
             </div>
             <div class="col-md-12 col-sm-12 col-xs-12 user-detail-section1 text-center">

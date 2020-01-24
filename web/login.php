@@ -37,7 +37,7 @@ if(isset($_POST['form'])){
 
         if($stmt->rowCount()!=0){
             $row = $stmt->fetch();
-            echo print_r($row);
+            #echo print_r($row);
 
             if($row){
                 #session_regenerate_id(true);
@@ -86,7 +86,7 @@ if(isset($_POST['form'])){
         <p><label for="role">Role:</label><br />
         <select name="role" id="role">
             <option value="student">student</option>
-            <option value="teacher">teacher</option>
+            <option value="instructor">instructor</option>
         </select>
         </p>
 

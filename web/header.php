@@ -43,20 +43,17 @@
         
 <?php
 
-if(strpos($_SERVER['REQUEST_URI'],"transcript.php") || strpos($_SERVER['REQUEST_URI'],"myClass.php")){
-    echo '<button type="button" class="btn btn-warning" onClick="window.print()">Print this page</button>';
-}
+    if(strpos($_SERVER['REQUEST_URI'],"transcript.php") || strpos($_SERVER['REQUEST_URI'],"myClass.php")){
+        echo '<button type="button" class="btn btn-warning" onClick="window.print()">Print this page</button>';
+    }
 
-            if(isset($_SESSION['login'])){
-
-             echo '<button type="button" class="btn btn-dark" onClick="window.location.href=\''.$mainLocation.'logout.php\'">LOGOUT</button>';
-
-            }
-            else{
-
-            echo '<button type="button" class="btn btn-ligth" onClick="window.location.href=\''.$mainLocation.'login.php\'">LOGIN</button>';
-
-            }
+    if(isset($_SESSION['login'])){
+        echo '<button type="button" class="btn btn-dark" onClick="window.location.href=\''.$mainLocation.'logout.php\'">LOGOUT</button>';
+    }
+    else{
+    echo '<button type="button" class="btn btn-ligth" onClick="window.location.href=\''.$mainLocation.'login.php\'">LOGIN</button>';
+    }
+    
 ?>
 
         </div>

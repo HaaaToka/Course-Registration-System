@@ -764,3 +764,60 @@ def fillcollectedCreditsGrades(dbCon):
             print(stuid[0])
             
     dbCon.commit()
+
+def matchStudentAdvisor(dbCon):
+
+    with dbCon.cursor() as cursor:
+
+        cursor.execute("select departmentID from Department")
+        depNos=cursor.fetchall()
+        #print(depNos)
+
+        for dep in depNos:
+            depid = dep[0]
+            
+            cursor.execute("select studentID from Student where departmentID=%s and advisor is null"%depid)
+            stuNos=cursor.fetchall()
+            #print(stuNos)
+
+            cursor.execute("select instructorID from Instructor where departmentID=%s"%depid)
+            insNos = cursor.fetchall()
+            lni=len(insNos)
+            #print(insNos)
+
+            i=0
+            for stu in stuNos:
+                stuid = stu[0]
+                sql = "UPDATE Student SET advisor = %s WHERE studentID=%s"
+                cursor.execute(sql%(insNos[i%lni][0],stuid))
+                i+=1
+
+
+            print(depid)
+    
+    dbCon.commit()
+        
+
+def fillGraduation(dbCon):
+
+    with dbCon.cursor() as cursor:
+
+        cursor.execute("select studentID from Student where startYear<2015")
+        stuNos=cursor.fetchall()
+
+        sql="UPDATE Student SET graduate = 1 WHERE (studentID = %s)"
+        for stuid in stuNos:
+            cursor.execute(sql%stuid[0])
+            print(stuid[0],"+")
+        
+
+        cursor.execute("select studentID from Student where startYear>=2015")
+        stuNos=cursor.fetchall()
+
+        sql="UPDATE Student SET graduate = 0 WHERE (studentID = %s)"
+        for stuid in stuNos:
+            cursor.execute(sql%stuid[0])
+            print(stuid[0],"-")
+
+            
+    dbCon.commit()

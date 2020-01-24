@@ -50,7 +50,7 @@ $newconn = new ConnectDB($sn,$un,$pss,$db);
             <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#schedule">
                 <div class="card-body" id="cardbody">
 
-                    <?php generateSchedule($newconn->conn,$_SESSION["userid"]); ?>
+                    <?php generateSchedule($newconn->conn,$_SESSION['role'],$_SESSION["userid"],$_SESSION['year'],$_SESSION['term']); ?>
 
                 </div>
             </div>
