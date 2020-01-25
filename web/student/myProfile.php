@@ -9,6 +9,11 @@ $stmt->execute();
 $who = $stmt->fetch();
 # print_r($who);
 
+$stmt=$newconn->conn->prepare("select name,surname from Instructor where instructorID=".$who['advisor']);
+$stmt->execute();
+$myadvisor=$stmt->fetch();
+#print_r($myadvisor);
+
 if(isset($_POST["submit"])) {
 
     $target_dir ="../media/pp/stu/";
@@ -32,10 +37,10 @@ if(isset($_POST["submit"])) {
 ?>
 
 <div class="container">
-    <h1 class="display-3" align="center">Hello How Are You, <?php  echo $_SESSION['name']." ".$_SESSION['surname'];?></h1>
+    <!-- <h1 class="display-3" align="center">Hello How Are You, <?php  echo $_SESSION['name']." ".$_SESSION['surname'];?></h1> -->
     <blockquote class="blockquote text-right">
-        <p class="mb-0">Buraya soyle tasaklı bir cümle yazda boş durmasın bu sayfada</p>
-        <footer class="blockquote-footer">someone famous among you </footer>
+        <p class="mb-0">Gençler, Cesaretimizi güçlendiren ve sürdüren sizlersiniz. Siz, almakta olduğunuz terbiye ve kültür ile, insanlık değerinin, vatan sevgisinin en değerli örneği olacaksınız.</p>
+        <footer class="blockquote-footer">Mustafa Kemal ATATÜRK</footer>
     </blockquote>
 </div>
 
@@ -153,6 +158,14 @@ if(isset($_POST["submit"])) {
                                     </div>
                                     <div class="col-md-6">
                                         <p><a href="transcript.php" class="badge badge-warning">Click Me To Look Transcript</a></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label>Advisor</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><?php echo $myadvisor['name']." ".$myadvisor['surname']?></p>
                                     </div>
                                 </div>
                             </div>

@@ -185,5 +185,12 @@ $who = $stmt2->fetch();
 </div>
 
 <div class="container">
-    <?php helperHeader("Spring",$_SESSION['startyear']); generateTranscript($gradeKlass); ?>
+    <?php 
+        if(sizeof($gradeKlass)>0){
+            helperHeader("Spring",$_SESSION['startyear']); generateTranscript($gradeKlass);
+        }
+        else{
+            echo "You haven't graded any course";
+        }
+    ?>
 </div>

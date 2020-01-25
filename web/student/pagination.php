@@ -93,6 +93,7 @@ else{
                     <th scope="col">Course Name</th>
                     <th scope="col">Section Number</th>
                     <th scope="col">Remaining Quota</th>
+                    <th scope="col">Credit</th>
                     <th scope="col"></th>
                     </tr>
                 </thead>
@@ -113,6 +114,7 @@ else{
                 <td>'.$row["CourseName"].'</td>
                 <td>'.$row["sectionID"].'</td>
                 <td>'.$row["quota"].'</td>
+                <td>'.$row["credit"].'</td>
                 <td>'.$button.'</td>
             </tr>
         ';

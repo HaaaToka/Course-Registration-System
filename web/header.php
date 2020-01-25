@@ -1,8 +1,36 @@
 
-<?php include_once "config.php";?>
+<?php 
+
+function innarray($uri){
+    $search = explode("?",array_pop(explode("/",$uri)))[0];
+    //echo $search."->>";
+    $pages=array("transcript.php",
+                "myClass.php",
+                "lookClass.php");
+    foreach($pages as $page){
+        if($page==$search){
+            return 1;
+        }
+    }
+    return 0;
+}
+
+function printButton($uri){
+    
+    // echo $uri.$mainLocation."<br>,,";
+    // echo innarray($uri,$mloc);
+    if(innarray($uri,$mainLocation))
+        echo '<button type="button" class="btn btn-warning" onClick="window.print()">Print this page</button>';
+}
+
+include_once "config.php";
+include_once "function.php";
+
+
+?>
 
 <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="<?php echo $mainLocation;?>index.php"><img width="125" height="50" src="<?php echo $mainLocation;?>/media/img/hackerman.png"></a>
+    <a class="navbar-brand" href="<?php echo $mainLocation;?>index.php"><img width="60" height="50" src="<?php echo $mainLocation;?>/media/img/hackerman3.png"></a>
 
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,7 +57,8 @@
                         <a href="<?php echo $mainLocation;?>student/courseRegistration.php" class="dropdown-item">Course Registration</a>  
                     <?php }elseif($_SESSION["role"]=="instructor"){?>
                         <a href="<?php echo $mainLocation;?>instructor/myClass.php" class="dropdown-item">My Classes</a>
-                        <a href="<?php echo $mainLocation;?>instructor/myProfile.php" class="dropdown-item">My Profile</a>  
+                        <a href="<?php echo $mainLocation;?>instructor/myProfile.php" class="dropdown-item">My Profile</a>
+                        <a href="<?php echo $mainLocation;?>instructor/myOldClass.php" class="dropdown-item">My Old Classes</a>  
                     <?php }?>
                 </div>
             </li>
@@ -43,9 +72,8 @@
         
 <?php
 
-    if(strpos($_SERVER['REQUEST_URI'],"transcript.php") || strpos($_SERVER['REQUEST_URI'],"myClass.php")){
-        echo '<button type="button" class="btn btn-warning" onClick="window.print()">Print this page</button>';
-    }
+
+    printButton($_SERVER['REQUEST_URI']);
 
     if(isset($_SESSION['login'])){
         echo '<button type="button" class="btn btn-dark" onClick="window.location.href=\''.$mainLocation.'logout.php\'">LOGOUT</button>';

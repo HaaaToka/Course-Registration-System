@@ -1,5 +1,19 @@
 <?php
 
+function updateQuota($cid,$sid,$courseName,$quota){
+    echo '<div class="container">
+            <h2 class="display-5">Change Quota of '.$courseName.' Section '.$sid.'</h4><br>
+            <h4 class="display-5">Remaining Quota is '.$quota.' (Write -5 to decrease 5 quota or write 5 for increasing)</h4><br>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <button class="btn btn-outline-secondary" type="button" id="button-addon1">UPDATE</button>
+                </div>
+                <input type="text" class="form-control" id="change">
+            </div>
+        </div>';
+}
+
+
 function initTable($cid,$sid){
 
     echo '<div class="container"><br>
@@ -38,7 +52,7 @@ include_once "../includer.php";
 $newconn = new ConnectDB($sn,$un,$pss,$db);
 
 
-if(isset($_GET["cid"])){
+if(isset($_GET["cid"]) && isset($_GET["sid"]) ){
     $cid = $_GET['cid'];
     $sid = $_GET['sid'];
     $checkClassMine = "select count(*) as count from InstructorGivesCourse where classID=".$cid." and instructorID=".$_SESSION['userid'];
@@ -46,6 +60,14 @@ if(isset($_GET["cid"])){
     $stmt->execute();
     $count = $stmt->fetch();
     if($count['count']==1){
+
+        $stmt = $newconn->conn->prepare("select * from joincourseclasssection where classID=".$cid." and sectionID=".$sid);
+        $stmt->execute();
+        $secinfo=$stmt->fetch();
+
+        updateQuota($cid,$sid,$secinfo['CourseName'],$secinfo['quota']);
+
+
         initTable($cid,$sid);
         $whoTakeThisClassSql = "select * from studenttakencourseJoin where classID=".$cid." and sectionID=".$sid;
         // echo $whoTakeThisClassSql;
@@ -70,3 +92,32 @@ if(isset($_GET["cid"])){
 
 
 </div>
+
+
+<script>
+
+function updateQuota(functionName,amount){
+    $.ajax({
+      url:"api.php",
+      type:"POST",
+      data:{
+              function:functionName,
+              classid:<?php echo $cid?>,
+              sectionid:<?php echo $sid?>,
+              amount:amount
+      },
+      success:function(data){
+        alert("You changed section quota -_-");
+      },
+      complete:function(){
+          document.location.reload(true);
+      }
+    });
+  }
+
+$(document).on('click','.btn-outline-secondary',function(){
+      var change = document.getElementById("change").value;
+      updateQuota("updatequota",change);  
+  });
+
+</script>

@@ -32,7 +32,7 @@ if(isset($_POST["submit"])) {
 ?>
 
 <div class="container">
-    <h1 class="display-3" align="center">Hello How Are You, <?php  echo $_SESSION['name']." ".$_SESSION['surname'];?></h1>
+    <!-- <h1 class="display-3" align="center">Hello How Are You, <?php  echo $_SESSION['name']." ".$_SESSION['surname'];?></h1> -->
     <blockquote class="blockquote text-right">
         <p class="mb-0">Yeni nesli, Cumhuriyet’in özverili öğretmen ve eğitmenleri, sizler yetiştireceksiniz; yeni nesil, sizin eseriniz olacaktır. Eserin kıymeti, sizin yeteneğiniz ve özveriniz derecesiyle uygun olacaktır. Cumhuriyet; fikren, ilmen, fennen, bedenen kuvvetli ve yüksek karakterli koruyucular ister. Yeni nesli, bu kalite ve yetenekte yetiştirmek sizin elinizdedir. Sizlerin, seçkin görevinizin yerine getirilmesine büyük özveriyle varlığınızı vereceğinize hiç şüphe etmem.</p>
         <footer class="blockquote-footer">MUSTAFA KEMAL ATATURK </footer>

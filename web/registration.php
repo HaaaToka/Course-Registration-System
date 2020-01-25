@@ -35,7 +35,10 @@ if(isset($_POST['form'])){
             $row = $stmt->fetch();
             // echo print_r($row);
             if($row){
-                $message = 'Yuppiii! You are a student at OYT. <br> Your Student ID = '.$row['sid'].' Password='.$nname.$ssurname.'123 <br><a href="login.php">Click Me To Log In</a>';
+                
+                $message = 'Yuppiii! You are a student at OYT. <br> 
+                            Your Student ID = <span class="badge badge-success">'.$row['sid'].'</span> Password= <span class="badge badge-success">'.$nname.$ssurname.'123</span> 
+                            <br><a class="badge badge-primary" href="login.php">Click Me To Log In</a>';
             }
         }
         else{

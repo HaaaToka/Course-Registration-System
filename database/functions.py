@@ -1,6 +1,6 @@
 from itertools import product
 from collections import defaultdict
-from random import randint
+from random import randint,shuffle
 from string import ascii_uppercase
 
 def name_surnameStudent():
@@ -820,4 +820,101 @@ def fillGraduation(dbCon):
             print(stuid[0],"-")
 
             
+    dbCon.commit()
+
+
+
+def passYear(dbCon,studentNo,lessons):
+    goodGrades=["A1","A2","A3","B1","B2","B3","C1","C2","C3","D"]
+    badGrades=["F1","F2","F3"]
+
+    with dbCon.cursor() as cursor:
+        failerChance=randint(0,10)
+        if(failerChance<3):#bad
+            for les in lessons:
+                cursor.execute("call insertStudentHasGradedCourse(%s,%s,%s,'%s')"%(studentNo,les[0],les[1],badGrades[randint(0,2)]))
+            return studentNo
+        else:#good
+            for les in lessons:
+                cursor.execute("call insertStudentHasGradedCourse(%s,%s,%s,'%s')"%(studentNo,les[0],les[1],goodGrades[randint(0,9)]))
+            return 0
+    
+    dbCon.commit()
+
+def takeYear(dbCon,studentNo,lessons):
+    
+    with dbCon.cursor() as cursor:
+        for les in lessons:
+            cursor.execute("call insertStudentTakenCourse(%s,%s,%s)"%(studentNo,les[1],1))
+    dbCon.commit()
+
+
+
+def gradeMe(dbCon,news):
+    
+    getStu="select * from Student where studentID=%s"
+    with dbCon.cursor() as cursor:
+
+        cursor.execute("select distinct courseID,classID from joincourseclasssection where departmentID=41 and term='Fall' and year=2018 and CourseCode LIKE '___1%'")
+        klass2018=cursor.fetchall()
+
+        cursor.execute("select distinct courseID,classID from joincourseclasssection where departmentID=41 and term='Fall' and year=2019 and CourseCode LIKE '___1%'")
+        klass2019=cursor.fetchall()
+
+        failedguys=[]
+        for stu in news:
+            cursor.execute(getStu%stu)
+            stu=list(cursor.fetchall()[0])
+            print(stu)
+            
+            if(stu[4]==2019):
+                takeYear(dbCon,stu[0],klass2019)
+            elif(stu[4]==2018):
+                failedguys.append(passYear(dbCon,stu[0],klass2018))
+
+            
+        for stuNo in failedguys:
+            print("failed->",stuNo)
+            if stuNo!=0:
+                takeYear(dbCon,stuNo,klass2019)
+
+    dbCon.commit()
+
+def statComp(dbCon):
+
+    students=list(name_surnameStudent())
+    shuffle(students)
+    students=students[:100]
+    news=[]
+
+    with dbCon.cursor() as cursor:
+
+        regStuSQL="call registration('%s','%s',%s)"
+        for stu in list(students):
+            yyyy = randint(2018,2019)
+            print(regStuSQL%(stu[0],stu[1],yyyy))
+
+            cursor.execute(regStuSQL%(stu[0],stu[1],yyyy))
+            stuNo = cursor.fetchall()[0][0]
+            #print(stuNo)
+            news.append(stuNo)
+    
+    dbCon.commit()
+    print(list(news))
+
+
+
+def revert(dbCon):
+
+    with dbCon.cursor() as cursor:
+
+        cursor.execute("select classID,sectionID from joincourseclasssection where year=2019 and departmentID=41")
+        
+        sec = cursor.fetchall()
+
+        for s in sec:
+            sql = "update Section set quota=%s where classID=%s and sectionID=%s"%(randint(60,70),s[0],s[1])
+            print(sql)
+            cursor.execute(sql)
+
     dbCon.commit()

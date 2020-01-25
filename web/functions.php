@@ -19,6 +19,9 @@ function sqli_check_1($data)
     
 }
 
+
+
+
 function file_upload_check($file, $file_extensions  = array("jpeg", "jpg", "png", "gif"), $target_dir)
 {
     
@@ -27,7 +30,7 @@ function file_upload_check($file, $file_extensions  = array("jpeg", "jpg", "png"
     $imageFileType = strtolower(pathinfo(basename($file["name"]),PATHINFO_EXTENSION));
     $target_file = $target_dir .$_SESSION['userid'].".png";
 
-    echo "----->>".$target_file."-------------".$imageFileType."-------------";
+    // echo "----->>".$target_file."-------------".$imageFileType."-------------";
 
     $check = getimagesize($file["tmp_name"]);
     if($check == false) {
@@ -42,7 +45,7 @@ function file_upload_check($file, $file_extensions  = array("jpeg", "jpg", "png"
     // Check if file already exists
     if (file_exists($target_file)) {
         # $error = "Sorry, file already exists.";
-        echo $target_file;
+        //echo $target_file;
         if (!unlink($target_file)){
             return"Error deleting ";
         }

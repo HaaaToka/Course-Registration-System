@@ -38,10 +38,18 @@ include "../includer.php";
 
 $newconn = new ConnectDB($sn,$un,$pss,$db);
 
+
+$yyyy = "";
+
+if($_SESSION['term']=="Fall")
+    $yyyy=$_SESSION['year']."-".($_SESSION['year']+1);
+else
+    $yyyy=($_SESSION['year']-1)."-".$_SESSION['year'];
+
 ?>
 
 <div class="container" id="topOfCredit">
-    <h1 class="display-4">Kalabalik dursun</h1>
+    <h1 class="display-4"><?php echo $yyyy." ".$_SESSION['term']." Semester"?></h1>
 </div>
 
 
@@ -92,13 +100,6 @@ $newconn = new ConnectDB($sn,$un,$pss,$db);
 
 
 </div>
-
-
-
-
-<script>
-
-
 
 
 <?php
