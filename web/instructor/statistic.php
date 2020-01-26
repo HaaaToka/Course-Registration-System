@@ -117,7 +117,7 @@ if(isset($_GET['cid']) && isset($_GET['sid'])){
     };
     var chDonut2 = document.getElementById("chDonut2");
     if (chDonut2) {
-    new Chart(chDonut2, {
+    var cd2=new Chart(chDonut2, {
         type: 'pie',
         data: chDonutData2,
         options: donutOptions

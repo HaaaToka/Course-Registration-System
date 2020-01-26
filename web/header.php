@@ -43,29 +43,43 @@ include_once "function.php";
             <li class="nav-item">
                 <a class="badge-danger nav-link" href="<?php echo $mainLocation;?>media/img/hackDatabase.png">-_-</a>
             </li>
-<?php if(isset($_SESSION["login"])){?>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">
-                    MENU
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <?php if($_SESSION["role"]=="student"){?>  
-                        <a href="<?php echo $mainLocation;?>student/myClass.php" class="dropdown-item">My Classes</a>
-                        <a href="<?php echo $mainLocation;?>student/myProfile.php" class="dropdown-item">My Profile</a>
-                        <a href="<?php echo $mainLocation;?>student/transcript.php" class="dropdown-item">My Transcript</a>
-                        <a href="<?php echo $mainLocation;?>student/courseRegistration.php" class="dropdown-item">Course Registration</a>  
-                    <?php }elseif($_SESSION["role"]=="instructor"){?>
-                        <a href="<?php echo $mainLocation;?>instructor/myClass.php" class="dropdown-item">My Classes</a>
-                        <a href="<?php echo $mainLocation;?>instructor/myProfile.php" class="dropdown-item">My Profile</a>
-                        <a href="<?php echo $mainLocation;?>instructor/myOldClass.php" class="dropdown-item">My Old Classes</a>  
-                    <?php }?>
-                </div>
-            </li>
-            <li class="nav-item" >
-                <span class="badge badge-light">Welcome : <?php echo $_SESSION["userid"]?></span>
-            </li>
-<?php } ?>          
+<?php if(isset($_SESSION["login"])){
+            if($_SESSION['role']!="admin"){?>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        MENU
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <?php if($_SESSION["role"]=="student"){?>  
+                            <a href="<?php echo $mainLocation;?>student/myClass.php" class="dropdown-item">My Classes</a>
+                            <a href="<?php echo $mainLocation;?>student/myProfile.php" class="dropdown-item">My Profile</a>
+                            <a href="<?php echo $mainLocation;?>student/transcript.php" class="dropdown-item">My Transcript</a>
+                            <a href="<?php echo $mainLocation;?>student/courseRegistration.php" class="dropdown-item">Course Registration</a>  
+                        <?php }elseif($_SESSION["role"]=="instructor"){?>
+                            <a href="<?php echo $mainLocation;?>instructor/myClass.php" class="dropdown-item">My Classes</a>
+                            <a href="<?php echo $mainLocation;?>instructor/myProfile.php" class="dropdown-item">My Profile</a>
+                            <a href="<?php echo $mainLocation;?>instructor/myOldClass.php" class="dropdown-item">My Old Classes</a>  
+                        <?php }?>
+                    </div>
+                </li>
+                <li class="nav-item" >
+                    <span class="badge badge-light">Welcome : <?php echo $_SESSION["userid"]?></span>
+                </li>
+<?php       }
+            else{?>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="<?php echo $mainLocation;?>admin/deparment.php" class="dropdown-item">Departments</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?php echo $mainLocation;?>admin/course.php" class="dropdown-item">Courses</a>
+                </li>              
+                <li class="nav-item">
+                    <a class="nav-link" href="<?php echo $mainLocation;?>admin/person.php" class="dropdown-item">People</a>
+                </li>
+<?php       }
+        } ?>          
         </ul>
 
         <div id="loginout">

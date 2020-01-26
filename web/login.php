@@ -15,9 +15,9 @@ $message = "";
 
 if(isset($_POST['form'])){
     // print_r($_POST);    
-    $userid = $_POST['userid'];
-    $password = $_POST['password'];
-    #$password =  hash("sha1",$_POST['password'],false);
+    $userid = addslashes($_POST['userid']);
+    #$password = addslashes($_POST['password']);
+    $password =  hash("sha1",$_POST['password'],false);
 
     if($_POST['role']=='student'){
         $sql = "SELECT * FROM UsersStudent WHERE userid='$userid'AND password='$password'";

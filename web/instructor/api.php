@@ -14,7 +14,8 @@ if(isset($_POST['function'])){
         $sid=$_POST['sectionid'];
         $amount=$_POST['amount'];
 
-        $updatequotaSQL="UPDATE Section SET quota=quota+".$amount." where classID=".$cid." and sectionID=".$sid;
+        $updatequotaSQL="call updateQuota(".$cid.",".$sid.",".$amount.")";
+        //$updatequotaSQL="UPDATE Section SET quota=quota+".$amount." where classID=".$cid." and sectionID=".$sid;
         $stmt=$newconn->conn->prepare($updatequotaSQL);
         $stmt->execute();
         print_r($stmt->fetchall());
