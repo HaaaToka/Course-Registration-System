@@ -70,7 +70,7 @@ include_once "function.php";
             else{?>
                 
                 <li class="nav-item">
-                    <a class="nav-link" href="<?php echo $mainLocation;?>admin/deparment.php" class="dropdown-item">Departments</a>
+                    <a class="nav-link" href="<?php echo $mainLocation;?>admin/department.php" class="dropdown-item">Departments</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="<?php echo $mainLocation;?>admin/course.php" class="dropdown-item">Courses</a>

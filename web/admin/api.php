@@ -39,7 +39,7 @@ if(isset($_POST['function'])){
 
     else if($_POST['function']=="fillclasses"){
         $cid = $_POST['courseid'];
-        $stmt=$newconn->conn->prepare("Select * from Class where courseID=".$cid." order by year");
+        $stmt=$newconn->conn->prepare("Select * from Class where courseID=".$cid." and year<2019 order by year");
         $stmt->execute();
         $getClasses=$stmt->fetchall();
         //print_r($getClasses);

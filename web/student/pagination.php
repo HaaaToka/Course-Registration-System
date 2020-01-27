@@ -46,7 +46,7 @@ if(isset($_POST["cpp"]))
     $record_per_page=$_POST["cpp"];
 
 if(isset($_POST["sc"]))
-    $searching=$_POST["sc"];
+    $searching= addcslashes($_POST["sc"]);
 
 if(isset($_POST["filteryear"])){
     if(strpos("1234",$_POST["filteryear"][0])!==false){

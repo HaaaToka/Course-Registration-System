@@ -3,76 +3,58 @@ from collections import defaultdict
 from random import randint,shuffle
 from string import ascii_uppercase
 
+goodGrades=["A1","A2","A3","B1","B2","B3","C1","C2","C3","D"]
+badGrades=["F1","F2","F3"]
+allgradeletters=goodGrades+badGrades
+
 def name_surnameStudent():
     txtN = """
-onur
-akif
-bilge
-batu
-batuhan
-mete
-metehan
-cemil
-burak
-furkan
-çağlar
-yahya
-güney
-ali
-berat
-faruk
-ömer
-bilal
-miraç
-bahar
+ahmet
+mehmet
+aydan
+emir
+serbay
+serhat
+serkan
+altuğ
+çiğdem
+deliha
+göktay
+gökhan
 aslı
-esra
-zeliha
-ayşe
-burhan
-didem
-damla
-tuğçe
-yağmur
-müge
-şeyma
-buse
-gizem
-aslan
-simge
-hatice
-fevzi
+aydın
+ayhan
+hakan
+volkan
+mine
+mina
+ayça
+meric
+kaan
+hasan
+murat
     """
     txtS="""
-erek
-erim erkoç
-erol
-çınar
-kaya
-taş
-çiftçi
-kumru
-kul
-maden
-özer
-özbey
-teker
-lastik
-top
-toka
+yilmaz
 acar
-adıgüzel
-ağaç
-kütük
-koçak
-yağlıca
-hamsi
-aslan
-kaplan
-kedi
-köpek
-kuş
-keçi
+tosun
+metrekare
+santim
+metre
+ceg
+kapak
+kalem
+dolma
+defter
+kaygı
+kulak
+göz
+burunsuz
+kör
+köroğlu
+kılcı
+köksal
+gelen
     """
 
     lstN = txtN.split("\n")
@@ -825,8 +807,6 @@ def fillGraduation(dbCon):
 
 
 def passYear(dbCon,studentNo,lessons):
-    goodGrades=["A1","A2","A3","B1","B2","B3","C1","C2","C3","D"]
-    badGrades=["F1","F2","F3"]
 
     with dbCon.cursor() as cursor:
         failerChance=randint(0,10)
@@ -918,3 +898,69 @@ def revert(dbCon):
             cursor.execute(sql)
 
     dbCon.commit()
+
+
+def deleteStudent(dbCon,students):
+
+    with dbCon.cursor() as cursor:
+        
+        deluserSQL = "delete from UsersStudent where userid=%s"
+        deltakenCourse = "delete from StudentTakenCourse where studentID=%s"
+        deltgraded = "delete from StudentHasGraded where studentID=%s"
+        delstu = "delete from Student where studentID=%s"
+
+        for stu in students:
+            print(deluserSQL%(stu))
+            print(deltakenCourse%(stu))
+            print(deltgraded%(stu))
+            print(delstu%(stu))
+
+            cursor.execute(deluserSQL%(stu))
+            cursor.fetchall()
+            cursor.execute(deltakenCourse%(stu))
+            cursor.fetchall()
+            cursor.execute(deltgraded%(stu))
+            cursor.fetchall()
+            cursor.execute(delstu%(stu))
+            cursor.fetchall()
+    
+    dbCon.commit()
+
+
+def generateFakeStuComp(dbCon):
+
+    gnc=50
+    ns=list(name_surnameStudent())
+    shuffle(ns)
+    ns=ns[:gnc]
+    # print(ns)
+
+    with dbCon.cursor() as cursor:
+
+        for i in range(gnc):
+            print(ns[i])
+            name=ns[i][0]
+            surname=ns[i][1]
+
+            insertStuSQL="call insertStudent('%s','%s',%s,%s)"
+            cursor.execute(insertStuSQL%(name,surname,randint(2012,2015),41))
+            dbCon.commit()
+
+            cursor.execute("select max(studentID) as maxi from Student")
+            stuID=cursor.fetchall()[0][0]
+            # print(stuID)
+
+            cursor.execute("update Student set graduate=1 where studentID=%s"%stuID)
+
+            cursor.execute("SELECT * FROM joincourseclasssection where departmentID=41 and year<2019 and sectionID=1")
+            ccs = cursor.fetchall() 
+
+            gradeKlass="insert into StudentHasGraded values(%s,%s,%s,'%s');"
+            for klass in ccs:
+                cursor.execute(gradeKlass%(stuID,klass[0],klass[5],allgradeletters[randint(0,12)]))
+                # print(gradeKlass%(stuID,klass[0],klass[5],allgradeletters[randint(0,12)]))
+    
+            dbCon.commit()
+
+
+
