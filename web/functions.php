@@ -275,5 +275,13 @@ function generateSchedule($connection,$role,$myid,$year,$term){
 
 }
 
+function yearHelper($term,$year){
+    if($term=="Fall"){
+        return $year."-".($year+1);
+    }
+    else{
+        return ($year-1)."-".$year;
+    }
+}
 
 ?>

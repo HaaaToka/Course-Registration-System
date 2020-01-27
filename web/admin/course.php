@@ -29,7 +29,7 @@ $newconn = new ConnectDB($sn,$un,$pss,$db);
             </select>
         </div>
         <div class="col-auto my-1">
-            <button type="submit" class="btn btn-primary">NEXT</button>
+            <button type="submit" class="btn btn-primary btn-faculty">NEXT</button>
         </div>
     </div>
 </div>
@@ -42,20 +42,41 @@ $newconn = new ConnectDB($sn,$un,$pss,$db);
             </select>
         </div>
         <div class="col-auto my-1">
-            <button type="submit" class="btn btn-secondary">DONE</button>
+            <button type="submit" class="btn btn-primary btn-department">NEXT</button>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="form-row align-items-center">
+        <label class="mr-sm-2" for="departments">Course</label>
+        <div class="col-auto my-1">
+            <select class="custom-select mr-sm-2" id="courses">
+            </select>
+        </div>
+        <div class="col-auto my-1">
+            <button type="submit" class="btn btn-primary btn-course">NEXT</button>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="form-row align-items-center">
+        <label class="mr-sm-2" for="departments">Term</label>
+        <div class="col-auto my-1">
+            <select class="custom-select mr-sm-2" id="classes">
+            </select>
+        </div>
+        <div class="col-auto my-1">
+            <button type="submit" class="btn btn-secondary btn-class">DONE</button>
         </div>
     </div>
 </div>
 
 <div class="container" id="graphics">
-    <div class="row my-3">
-        <div class="col">
-            <?php echo '<h1 class="display-5" id="head">Information: </h1>'?>
-        </div>
-    </div>
     <div class="row py-2">
         <div class="col-md-5 py-1">
-            <h2 class="display-5">Male - Famale Student</h2>
+            <h2 class="display-5">Course Failed Passed</h2>
             <div class="card">
                 <div class="card-body">
                     <canvas id="chDonut1"></canvas>
@@ -63,7 +84,7 @@ $newconn = new ConnectDB($sn,$un,$pss,$db);
             </div>
         </div>
         <div class="col-md-5 py-1">
-            <h2 class="display-5">Instructor - Student</h2>
+            <h2 class="display-5">Class Failed Passed</h2>
             <div class="card">
                 <div class="card-body">
                     <canvas id="chDonut2"></canvas>
@@ -84,7 +105,7 @@ $newconn = new ConnectDB($sn,$un,$pss,$db);
 
     // donut 1
     var chDonutData1 = {
-        labels: ['Male ', 'Famale'],
+        labels: ['Failed ', 'Passed'],
         datasets: [
         {
             backgroundColor: colors.slice(0,2),
@@ -105,7 +126,7 @@ $newconn = new ConnectDB($sn,$un,$pss,$db);
 
     // donut 2
     var chDonutData2 = {
-        labels: ['Student', 'Instructor'],
+        labels: ['Failed', 'Passed'],
         datasets: [
         {
             backgroundColor: colors.slice(0,2),
@@ -130,21 +151,14 @@ $newconn = new ConnectDB($sn,$un,$pss,$db);
 
     <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
-            <a class="nav-link active" href="#student" role="tab" data-toggle="tab"><i
-                    class="fas fa-user-circle"></i> Students </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#instructor" role="tab" data-toggle="tab"><i
-                    class="fas fa-info-circle"></i> Instructors </a>
+            <a class="nav-link active" href="#student" role="tab" data-toggle="tab">
+                <i class="fas fa-user-circle"></i> Students Have Graded for Selected Term </a>
         </li>
     </ul>
 
     <!-- Tab panes -->
     <div class="tab-content">
         <div role="tabpanel" class="tab-pane fade show active" id="student">
-
-        </div>
-        <div role="tabpanel" class="tab-pane fade" id="instructor">
 
         </div>
     </div>
@@ -154,27 +168,13 @@ $newconn = new ConnectDB($sn,$un,$pss,$db);
 
 <script>
 
-function updateInsTable(departmentid){
+function updateStuGradedClass(classid){
     $.ajax({
         url:"api.php",
         type:"POST",
         data:{
-            function:"updateIns",
-            departmentid:departmentid
-        },
-        success:function(data){
-            document.getElementById('instructor').innerHTML=data;
-        }
-    });
-}
-
-function updateStuTable(departmentid){
-    $.ajax({
-        url:"api.php",
-        type:"POST",
-        data:{
-            function:"updateStu",
-            departmentid:departmentid
+            function:"updateStuGradedClass",
+            classid:classid
         },
         success:function(data){
             document.getElementById('student').innerHTML=data;
@@ -182,21 +182,35 @@ function updateStuTable(departmentid){
     });
 }
 
-function updateChart(facultyid,departmentid){
+function updateCourseChart(courseid){
     $.ajax({
         url:"api.php",
         type:"POST",
         data:{
-            function:"updatechart",
-            facultyid:facultyid,
-            departmentid:departmentid
+            function:"updatecoursechart",
+            courseid:courseid
         },
         success:function(data){
-            var mfi=JSON.parse(data);
+            var pf=JSON.parse(data);
             console.log(JSON.parse(data));
-            chDonutData1.datasets[0].data=[mfi['M'],mfi['F']]
-            chDonutData2.datasets[0].data=[mfi['M']+mfi['F'],mfi['Ins']]
+            chDonutData1.datasets[0].data=[pf['F'],pf['P']]
             cd1.update();
+        }
+    });
+}
+
+function updateClassChart(classid){
+    $.ajax({
+        url:"api.php",
+        type:"POST",
+        data:{
+            function:"updateclasschart",
+            classid:classid
+        },
+        success:function(data){
+            var pf=JSON.parse(data);
+            console.log(JSON.parse(data));
+            chDonutData2.datasets[0].data=[pf['F'],pf['P']]
             cd2.update();
         }
     });
@@ -218,22 +232,63 @@ function filldepartments(facultyid){
 
 }
 
+function fillcourses(depid){
+
+    $.ajax({
+        url:"api.php",
+        type:"POST",
+        data:{
+            function:"fillcourses",
+            departmentid:depid
+        },
+        success:function(data){
+            document.getElementById('courses').innerHTML=data;
+        }
+    });
+
+}
+
+function fillclasses(cid){
+
+    $.ajax({
+        url:"api.php",
+        type:"POST",
+        data:{
+            function:"fillclasses",
+            courseid:cid
+        },
+        success:function(data){
+            document.getElementById('classes').innerHTML=data;
+        }
+    });
+
+}
+
 // domAction , class, function
-$(document).on('click','.btn-primary',function(){
+$(document).on('click','.btn-faculty',function(){
     var fid = document.getElementById('faculties').value;
     console.log(fid);
     filldepartments(fid);
 });
 
-$(document).on('click','.btn-secondary',function(){
-    var fid = document.getElementById('faculties').value;
+$(document).on('click','.btn-department',function(){
     var did = document.getElementById('departments').value;
-    var selectedIndex = document.getElementById('departments').selectedIndex;
-    console.log(fid,did,selectedIndex);
-    document.getElementById('head').innerHTML="Information: "+document.getElementById('faculties').options[fid].innerHTML+" "+document.getElementById('departments').options[selectedIndex].innerHTML;
-    updateChart(fid,did);
-    updateStuTable(did);
-    updateInsTable(did);
+    console.log(did);
+    fillcourses(did);
+});
+
+$(document).on('click','.btn-course',function(){
+    var cid = document.getElementById('courses').value;
+    console.log(cid);
+    fillclasses(cid);
+    updateCourseChart(cid);
+});
+
+$(document).on('click','.btn-class',function(){
+    var classid = document.getElementById('classes').value;
+    console.log(classid);
+    updateStuGradedClass(classid);
+    updateClassChart(classid);
 });
 
 

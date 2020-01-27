@@ -22,6 +22,36 @@ if(isset($_POST['function'])){
         }
     }
 
+    else if($_POST['function']=="fillcourses"){
+        $depid = $_POST['departmentid'];
+        $stmt=$newconn->conn->prepare("Select * from Course where departmentID=".$depid." order by code");
+        $stmt->execute();
+        $getCourses=$stmt->fetchall();
+        // print_r($getCourses);
+
+        $i=0;
+        echo '<option  ordi="'.$i.'" value=0 selected>Choose...</option>';
+        foreach($getCourses as $cou){
+            $i++;
+            echo '<option ordi="'.$i.'" value='.$cou['courseID'].'>'.$cou['name'].'</option>';
+        }
+    }
+
+    else if($_POST['function']=="fillclasses"){
+        $cid = $_POST['courseid'];
+        $stmt=$newconn->conn->prepare("Select * from Class where courseID=".$cid." order by year");
+        $stmt->execute();
+        $getClasses=$stmt->fetchall();
+        //print_r($getClasses);
+
+        $i=0;
+        echo '<option  ordi="'.$i.'" value=0 selected>Choose...</option>';
+        foreach($getClasses as $klass){
+            $i++;
+            echo '<option ordi="'.$i.'" value='.$klass['classID'].'>'.yearHelper($klass['term'],$klass['year']).' - '.$klass['term'].'</option>';
+        }
+    }
+
     else if($_POST['function']=="updatechart"){
         $facid = $_POST['facultyid'];
         $depid = $_POST['departmentid'];
@@ -38,6 +68,33 @@ if(isset($_POST['function'])){
         $I = $InsCount[0]['Count'];
 
         echo json_encode(array("M"=>$M,"F"=>$F,"Ins"=>$I));
+    }
+
+    else if($_POST['function']=="updatecoursechart"){
+        $courseid = $_POST['courseid'];
+
+        $stmt=$newconn->conn->prepare("select (select count(*) from StudentHasGraded where courseID=".$courseid." and substr(grade,1,1)='F') as failed, (select count(*) from StudentHasGraded where courseID=".$courseid." and substr(grade,1,1)!='F') as passed;");
+        $stmt->execute();
+        $PF=$stmt->fetchall()[0];
+        //print_r($PF);
+        $P = $PF['passed'];
+        $F = $PF['failed'];
+
+        echo json_encode(array("P"=>$P,"F"=>$F));
+    }
+
+    else if($_POST['function']=="updateclasschart"){
+        $cid = $_POST['classid'];
+
+        $stmt=$newconn->conn->prepare("select (select count(*) from StudentHasGraded where classID=".$cid." and substr(grade,1,1)='F') as failed, (select count(*) from StudentHasGraded where classID=".$cid." and substr(grade,1,1)!='F') as passed;");
+        $stmt->execute();
+        $PF=$stmt->fetchall()[0];
+        //print_r($PF);
+        
+        $P = $PF['passed'];
+        $F = $PF['failed'];
+
+        echo json_encode(array("P"=>$P,"F"=>$F));
     }
 
     else if($_POST['function']=="updateStu"){
@@ -79,7 +136,40 @@ if(isset($_POST['function'])){
         echo '</tbody>
         </table>';
     }
-    
+
+    else if($_POST['function']=="updateStuGradedClass"){
+
+        $cid = $_POST['classid'];
+
+        $stmt=$newconn->conn->prepare("SELECT * FROM studenthasgradedJoin where classID=".$cid);
+        $stmt->execute();
+        $Students=$stmt->fetchall();
+
+        echo '<table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Student Number</th>
+                        <th scope="col">Student Name</th>
+                        <th scope="col">Student Surname</th>
+                        <th scope="col">Grade</th>
+                    </tr>
+                </thead>
+                <tbody>';
+        $i=1;
+        foreach($Students as $stu){
+            echo '<tr onclick="window.location=\'inspectStudent.php?stuid='.$stu['studentID'].'\';">
+                    <th scope="row">'.$i.'</th>
+                    <td>'.$stu['studentID'].'</td>
+                    <td>'.$stu['StudentName'].'</td>
+                    <td>'.$stu['StudentSurname'].'</td>
+                    <td>'.$stu['grade'].'</td>
+                </tr>';
+            $i++;
+        }
+        echo '</tbody>
+        </table>';
+    }
 
     else if($_POST['function']=="updateIns"){
 

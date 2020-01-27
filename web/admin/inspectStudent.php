@@ -169,14 +169,7 @@ if(isset($_GET["stuid"]) ){
 
 <?php
 
-function yearHelper($term,$year){
-    if($term=="Fall"){
-        return $year."-".($year+1);
-    }
-    else{
-        return ($year-1)."-".$year;
-    }
-}
+
 
 function fillStudentAdmin1($gradeKlass){
     $i=1;
