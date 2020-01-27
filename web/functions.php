@@ -10,7 +10,7 @@ function generateRandomString($length = 10) {
     return $randomString;
 }
 
-function sqli_check_1($data)
+function sql_check($data)
 {
     #if database's character set is big5, this is exploitable
     #sunun duzgununu yaz
