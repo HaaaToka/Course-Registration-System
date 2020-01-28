@@ -30,6 +30,9 @@ function initTable($cid,$sid){
                 <th scope="col">Student Number</th>
                 <th scope="col">First Name</th>
                 <th scope="col">Last Name</th>
+                <th scope="col">Grade</th>
+                <th scope="col">Save Grade</th>
+
             </tr>
             </thead>
             <tbody>';
@@ -41,6 +44,8 @@ function addRow2StudentCourse($i,$stu){
             <td>'.$stu['studentID'].'</td>
             <td>'.$stu['StudentName'].'</td>
             <td>'.$stu['StudentSurname'].'</td>
+            <td scope="col"><input size="2" type="text" id="newgrade'.$stu["studentID"].'"/></td>
+            <td scope="col"><button type="button" class="btn btn-success" courseid="'.$stu['courseID'].'" studentid ="'.$stu["studentID"].'" id="update">SAVE</button></td>
         </tr>';
 }
 
@@ -96,6 +101,8 @@ if(isset($_GET["cid"]) && isset($_GET["sid"]) ){
 
 <script>
 
+
+
 function updateQuota(functionName,amount){
     $.ajax({
       url:"api.php",
@@ -107,17 +114,49 @@ function updateQuota(functionName,amount){
               amount:amount
       },
       success:function(data){
-        alert("You changed section quota -_-");
+        alert(data);
       },
       complete:function(){
           document.location.reload(true);
       }
     });
-  }
+}
+
+function gradeStudent(studentid,courseid,grade){
+$.ajax({
+    url:"api.php",
+    type:"POST",
+    data:{
+            function:"gradeStudent",
+            studentid:studentid,
+            courseid:courseid,
+            classid:<?php echo $cid?>,
+            sectionid:<?php echo $sid?>,
+            grade:grade
+    },
+    success:function(data){
+        alert(data);
+    },
+    complete:function(){
+        document.location.reload(true);
+    }
+});
+}
 
 $(document).on('click','.btn-outline-secondary',function(){
       var change = document.getElementById("change").value;
       updateQuota("updatequota",change);  
   });
+
+
+$(document).on('click','.btn-success',function(){
+    var stuid=$(this).attr("studentid");
+    var cid=$(this).attr("courseid");
+    var niwgrade=document.getElementById("newgrade"+stuid).value;
+    console.log("gradeMe",cid,stuid);
+    if (window.confirm('Are you sure you want grade this student?')) {
+        gradeStudent(stuid,cid,niwgrade);
+    }
+});
 
 </script>

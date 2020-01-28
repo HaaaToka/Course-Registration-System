@@ -103,25 +103,34 @@ if(isset($_POST['function'])){
         $stmt->execute();
         $Facs=$stmt->fetchall();
         // print_r($Facs);
-        
         $facArr = array( );
         
+        $stmt=$newconn->conn->prepare("select * from takedropfacultycountView");
+        $stmt->execute();
+        $TDFC = $stmt->fetchall();
+        
+        $FCchart=array();
+        foreach($TDFC as $FC){
+            $FCchart = array_merge($FCchart,array($FC['ftd']=>$FC['count']));
+        }
+        //print_r($FCchart);
+        
         foreach($Facs as $f){
-            //print_r($f);
-            $stmt=$newconn->conn->prepare("select count(*) as count from takedropfacultycountView where facultyName='".$f['name']."' and takedrop='T'");
-            $stmt->execute();
-            $T = $stmt->fetchall()[0]['count'];
         
-            $stmt=$newconn->conn->prepare("select count(*) as count from takedropfacultycountView where facultyName='".$f['name']."' and takedrop='D'");
-            $stmt->execute();
-            $D = $stmt->fetchall()[0]['count'];
-        
+            $T=$FCchart[$f['name'].'T'];
+            $D=$FCchart[$f['name'].'D'];
+            if(is_null($T)){
+                $T=0;
+            }
+            if(is_null($D)){
+                $D=0;
+            }
             if($T+$D>0){
                 array_push($facArr,array("name"=>$f['name'],"T"=>$T, "D"=>$D ));
             }
+            //echo $f['name'].":".$T."-".$D."<br>";
         }
-        
-        // print_r($facArr);
+        //print_r($facArr);
 
         echo json_encode($facArr);
     }
@@ -133,26 +142,37 @@ if(isset($_POST['function'])){
         $stmt=$newconn->conn->prepare("Select name from Department where facultyID=".$facid);
         $stmt->execute();
         $Deps=$stmt->fetchall();
-        // print_r($Facs);
+        // print_r($Deps);
         
-        $facArr = array( );
         
-        foreach($Deps as $s){
-            //print_r($s);
-            $stmt=$newconn->conn->prepare("select count(*) as count from takedropdepartmentcountView where depname='".$s['name']."' and takedrop='T'");
-            $stmt->execute();
-            $T = $stmt->fetchall()[0]['count'];
+        $stmt=$newconn->conn->prepare("select * from takedropdepartmentcountView");
+        $stmt->execute();
+        $TDDC = $stmt->fetchall();
         
-            $stmt=$newconn->conn->prepare("select count(*) as count from takedropdepartmentcountView where depname='".$s['name']."' and takedrop='D'");
-            $stmt->execute();
-            $D = $stmt->fetchall()[0]['count'];
-        
-            if($T+$D>0){
-                array_push($facArr,array("name"=>$s['name'],"T"=>$T, "D"=>$D ));
-            }
+        $DCchart=array();
+        foreach($TDDC as $DC){
+            $DCchart = array_merge($DCchart,array($DC['dtd']=>$DC['count']));
         }
+        //print_r($DCchart);
 
-        echo json_encode($facArr);
+        $depArr = array( );
+        foreach($Deps as $d){
+            $T=$DCchart[$d['name'].'T'];
+            $D=$DCchart[$d['name'].'D'];
+            if(is_null($T)){
+                $T=0;
+            }
+            if(is_null($D)){
+                $D=0;
+            }
+            if($T+$D>0){
+                array_push($depArr,array("name"=>$d['name'],"T"=>$T, "D"=>$D ));
+            }
+            //echo $d['name'].":".$T."-".$D."<br>";
+        }
+        //print_r($depArr);
+
+        echo json_encode($depArr);
     }
     
     else if($_POST['function']=="updateCourseBarChart"){
@@ -162,26 +182,37 @@ if(isset($_POST['function'])){
         $stmt=$newconn->conn->prepare("Select name from Course where departmentID=".$depid);
         $stmt->execute();
         $Cous=$stmt->fetchall();
-        // print_r($Facs);
+        // print_r($Cous);
         
-        $facArr = array( );
+        $stmt=$newconn->conn->prepare("select * from takedropcoursecountView");
+        $stmt->execute();
+        $TDCC = $stmt->fetchall();
         
-        foreach($Cous as $c){
-            // print_r($c);
-            $stmt=$newconn->conn->prepare("select count(*) as count FROM takedropcoursecountView where coursename='".$c['name']."' and takedrop='T';");
-            $stmt->execute();
-            $T = $stmt->fetchall()[0]['count'];
-        
-            $stmt=$newconn->conn->prepare("select count(*) as count from takedropcoursecountView where coursename='".$c['name']."' and takedrop='D'");
-            $stmt->execute();
-            $D = $stmt->fetchall()[0]['count'];
-        
-            if($T+$D>0){
-                array_push($facArr,array("name"=>$c['name'],"T"=>$T, "D"=>$D ));
-            }
+        $CCchart=array();
+        foreach($TDCC as $CC){
+            $CCchart = array_merge($CCchart,array($CC['ctd']=>$CC['count']));
         }
+        //print_r($FCchart);
+        
+        $couArr = array( );
+        foreach($Cous as $c){
+        
+            $T=$CCchart[$c['name'].'T'];
+            $D=$CCchart[$c['name'].'D'];
+            if(is_null($T)){
+                $T=0;
+            }
+            if(is_null($D)){
+                $D=0;
+            }
+            if($T+$D>0){
+                array_push($couArr,array("name"=>$c['name'],"T"=>$T, "D"=>$D ));
+            }
+            //echo $c['name'].":".$T."-".$D."<br>";
+        }
+        //print_r($facArr);
 
-        echo json_encode($facArr);
+        echo json_encode($couArr);
     }
 
     else if($_POST['function']=="updateStu"){
@@ -332,7 +363,7 @@ if(isset($_POST['function'])){
             return;
         }
 
-        print_r($_POST);
+        // print_r($_POST);
 
         if($sid==0){
             $updateCourseGradeSQL = "UPDATE StudentHasGraded SET grade='".$newgrade."' where studentID=".$stuid." and classID=".$cid;

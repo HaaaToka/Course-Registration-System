@@ -24,7 +24,7 @@ function givenOldCoursesbyMe($conn,$insid,$year,$semester){
             </thead>
             <tbody>';
 
-    $sqlMyCourse="call OneInstructorOldClasses(".$insid.",".$year.")";
+    $sqlMyCourse="call OneInstructorOldClasses(".$insid.",".($year+1).")";
     $stmt=$conn->prepare($sqlMyCourse);
     $stmt->execute();
     foreach($stmt as $row){
@@ -44,7 +44,7 @@ $newconn = new ConnectDB($sn,$un,$pss,$db);
 
 
 <div class="container">
-    <h1 class="display-1"> MY OLD CLASSES</h1>
+    <h1 class="display-1"> MY ALL CLASSES</h1>
     <?php givenOldCoursesbyMe($newconn->conn,$_SESSION['userid'],$_SESSION['year'],$_SESSION['term']); ?>
 </div>
 

@@ -14,7 +14,6 @@ include_once "../includer.php";
 $newconn = new ConnectDB($sn,$un,$pss,$db);
 
 
-
 ?>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
@@ -122,14 +121,14 @@ $newconn = new ConnectDB($sn,$un,$pss,$db);
 
     var chBar = document.getElementById("chBarDepartment");
     var chartDataDep = {
-        labels: ["S", "M", "T", "W", "T", "F", "S"],
+        labels: ["O", "K", "A", "N", "A", "L", "A","N"],
         datasets: [{
-                data: [589, 445, 483, 503, 689, 692, 634],
+                data: [589, 445, 483, 503, 689, 692, 634,0],
                 backgroundColor: colors[0]
             },
             {
-                data: [209, 245, 383, 403, 589, 692, 580],
-                backgroundColor: colors[1]
+                data: [209, 245, 383, 403, 589, 692, 580,0],
+                backgroundColor: colors[4]
             }
         ]
     };
@@ -198,14 +197,14 @@ $newconn = new ConnectDB($sn,$un,$pss,$db);
 
     var chBar = document.getElementById("chBarCourse");
     var chartDataCou = {
-        labels: ["S", "M", "T", "W", "T", "F", "S"],
+        labels: ["O", "K", "A", "N", "A", "L", "A","N"],
         datasets: [{
-                data: [589, 445, 483, 503, 689, 692, 634],
+                data: [589, 445, 483, 503, 689, 692, 634,0],
                 backgroundColor: colors[0]
             },
             {
-                data: [209, 245, 383, 403, 589, 692, 580],
-                backgroundColor: colors[1]
+                data: [209, 245, 383, 403, 589, 692, 580,0],
+                backgroundColor: colors[4]
             }
         ]
     };
