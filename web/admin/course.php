@@ -95,7 +95,7 @@ $newconn = new ConnectDB($sn,$un,$pss,$db);
 </div>
 
 <script>
-    var colors = ['#007bff','#28a745','#333333','#c3e6cb','#dc3545','#6c757d'];
+    var colors = ['#ff0000','#007bff','#28a745','#333333','#c3e6cb','#dc3545','#6c757d'];
 
     /* 3 donut charts */
     var donutOptions = {
@@ -168,128 +168,128 @@ $newconn = new ConnectDB($sn,$un,$pss,$db);
 
 <script>
 
-function updateStuGradedClass(classid){
-    $.ajax({
-        url:"api.php",
-        type:"POST",
-        data:{
-            function:"updateStuGradedClass",
-            classid:classid
-        },
-        success:function(data){
-            document.getElementById('student').innerHTML=data;
-        }
+    function updateStuGradedClass(classid){
+        $.ajax({
+            url:"api.php",
+            type:"POST",
+            data:{
+                function:"updateStuGradedClass",
+                classid:classid
+            },
+            success:function(data){
+                document.getElementById('student').innerHTML=data;
+            }
+        });
+    }
+
+    function updateCourseChart(courseid){
+        $.ajax({
+            url:"api.php",
+            type:"POST",
+            data:{
+                function:"updatecoursechart",
+                courseid:courseid
+            },
+            success:function(data){
+                var pf=JSON.parse(data);
+                console.log(JSON.parse(data));
+                chDonutData1.datasets[0].data=[pf['F'],pf['P']]
+                cd1.update();
+            }
+        });
+    }
+
+    function updateClassChart(classid){
+        $.ajax({
+            url:"api.php",
+            type:"POST",
+            data:{
+                function:"updateclasschart",
+                classid:classid
+            },
+            success:function(data){
+                var pf=JSON.parse(data);
+                console.log(JSON.parse(data));
+                chDonutData2.datasets[0].data=[pf['F'],pf['P']]
+                cd2.update();
+            }
+        });
+    }
+
+    function filldepartments(facultyid){
+
+        $.ajax({
+            url:"api.php",
+            type:"POST",
+            data:{
+                function:"filldepartments",
+                facultyid:facultyid
+            },
+            success:function(data){
+                document.getElementById('departments').innerHTML=data;
+            }
+        });
+
+    }
+
+    function fillcourses(depid){
+
+        $.ajax({
+            url:"api.php",
+            type:"POST",
+            data:{
+                function:"fillcourses",
+                departmentid:depid
+            },
+            success:function(data){
+                document.getElementById('courses').innerHTML=data;
+            }
+        });
+
+    }
+
+    function fillclasses(cid){
+
+        $.ajax({
+            url:"api.php",
+            type:"POST",
+            data:{
+                function:"fillclasses",
+                courseid:cid
+            },
+            success:function(data){
+                document.getElementById('classes').innerHTML=data;
+            }
+        });
+
+    }
+
+    // domAction , class, function
+    $(document).on('click','.btn-faculty',function(){
+        var fid = document.getElementById('faculties').value;
+        console.log(fid);
+        filldepartments(fid);
     });
-}
 
-function updateCourseChart(courseid){
-    $.ajax({
-        url:"api.php",
-        type:"POST",
-        data:{
-            function:"updatecoursechart",
-            courseid:courseid
-        },
-        success:function(data){
-            var pf=JSON.parse(data);
-            console.log(JSON.parse(data));
-            chDonutData1.datasets[0].data=[pf['F'],pf['P']]
-            cd1.update();
-        }
-    });
-}
-
-function updateClassChart(classid){
-    $.ajax({
-        url:"api.php",
-        type:"POST",
-        data:{
-            function:"updateclasschart",
-            classid:classid
-        },
-        success:function(data){
-            var pf=JSON.parse(data);
-            console.log(JSON.parse(data));
-            chDonutData2.datasets[0].data=[pf['F'],pf['P']]
-            cd2.update();
-        }
-    });
-}
-
-function filldepartments(facultyid){
-
-    $.ajax({
-        url:"api.php",
-        type:"POST",
-        data:{
-            function:"filldepartments",
-            facultyid:facultyid
-        },
-        success:function(data){
-            document.getElementById('departments').innerHTML=data;
-        }
+    $(document).on('click','.btn-department',function(){
+        var did = document.getElementById('departments').value;
+        console.log(did);
+        fillcourses(did);
     });
 
-}
-
-function fillcourses(depid){
-
-    $.ajax({
-        url:"api.php",
-        type:"POST",
-        data:{
-            function:"fillcourses",
-            departmentid:depid
-        },
-        success:function(data){
-            document.getElementById('courses').innerHTML=data;
-        }
+    $(document).on('click','.btn-course',function(){
+        var cid = document.getElementById('courses').value;
+        console.log(cid);
+        fillclasses(cid);
+        updateCourseChart(cid);
     });
 
-}
-
-function fillclasses(cid){
-
-    $.ajax({
-        url:"api.php",
-        type:"POST",
-        data:{
-            function:"fillclasses",
-            courseid:cid
-        },
-        success:function(data){
-            document.getElementById('classes').innerHTML=data;
-        }
+    $(document).on('click','.btn-class',function(){
+        var classid = document.getElementById('classes').value;
+        console.log(classid);
+        updateStuGradedClass(classid);
+        updateClassChart(classid);
     });
-
-}
-
-// domAction , class, function
-$(document).on('click','.btn-faculty',function(){
-    var fid = document.getElementById('faculties').value;
-    console.log(fid);
-    filldepartments(fid);
-});
-
-$(document).on('click','.btn-department',function(){
-    var did = document.getElementById('departments').value;
-    console.log(did);
-    fillcourses(did);
-});
-
-$(document).on('click','.btn-course',function(){
-    var cid = document.getElementById('courses').value;
-    console.log(cid);
-    fillclasses(cid);
-    updateCourseChart(cid);
-});
-
-$(document).on('click','.btn-class',function(){
-    var classid = document.getElementById('classes').value;
-    console.log(classid);
-    updateStuGradedClass(classid);
-    updateClassChart(classid);
-});
 
 
 </script>

@@ -126,29 +126,55 @@ if(isset($_GET["insid"]) ){
 
 <?php
 
-
-
-function fillınstructordmin1($gradeKlass){
+function fillInstructorAdminCourse($newconn,$givenCourses){
     $i=1;
-    foreach($gradeKlass as $klass){
-        echo '<tr>
+    foreach($givenCourses as $cou){
+
+        $stmt=$newconn->conn->prepare("select (select count(*) from StudentHasGraded where classID=".$cou['classID']." and substr(grade,1,1)='F') as failed, (select count(*) from StudentHasGraded where classID=".$cou['classID']." and substr(grade,1,1)!='F') as passed;");
+        $stmt->execute();
+        $PF=$stmt->fetchall()[0];
+        // print_r($PF);
+
+        echo '<tr onclick="window.location=\'inspectClass.php?courseid='.$cou['courseID'].'&classid='.$cou['classID'].'\';">
                 <td scope="col">'.$i.'</td>
-                <td scope="col">'.$klass["code"].'</td>
-                <td scope="col">'.$klass["courseName"].'</td>
-                <td scope="col">'.yearHelper($klass["term"],$klass["year"]).'</td>
-                <td scope="col">'.$klass["term"].'</td>
-                <td scope="col"><input size="2" type="text" id="newgrade'.$klass["classID"].'" placeholder="'.$klass["grade"].'"/></td>
-                <td scope="col"><button type="button" class="btn btn-warning" courseid="'.$klass["courseID"].'" classid="'.$klass["classID"].'" sectionid="0" id="update">x</button></td>
-                <td scope="col"><button type="button" class="btn btn-danger" courseid="'.$klass["courseID"].'" classid="'.$klass["classID"].'" sectionid="0" id="delete">x</button></td>
+                <td scope="col">'.$cou["CourseCode"].'</td>
+                <td scope="col">'.$cou["CourseName"].'</td>
+                <td scope="col">'.yearHelper($cou["term"],$cou["year"]).'</td>
+                <td scope="col">'.$cou["term"].'</td>
+                <td scope="col">'.($PF['passed']+$PF['failed']).'</td>
+                <td scope="col">'.$PF['passed'].'</td>
+                <td scope="col">'.$PF['failed'].'</td>
             </tr>
                 ';
         $i++;
     }
 }
 
-$stmt = $newconn->conn->prepare("call getMyTranscript(".$insid.")");
+function fillInstructorAdminStudent($students){
+    $i=1;
+    foreach($students as $stu){
+
+        echo '<tr onclick="window.location=\'inspectStudent.php?stuid='.$stu['studentID'].'\';">
+                <td scope="col">'.$i.'</td>
+                <td scope="col">'.$stu["studentID"].'</td>
+                <td scope="col">'.$stu["name"].'</td>
+                <td scope="col">'.$stu["surname"].'</td>
+                <td scope="col">'.$stu['startYear'].'</td>
+                <td scope="col">'.number_format($stu['collectedGrade']/$stu['collectedCredits'], 2, '.', ',').'</td>
+            </tr>
+                ';
+        $i++;
+    }
+}
+
+$stmt = $newconn->conn->prepare("SELECT * FROM instructorgivescourseJoin where instructorID=".$insid);
 $stmt->execute();
-$gradeKlass = $stmt->fetchall();
+$givenCourses = $stmt->fetchall();
+//print_r($gradeKlass);
+
+$stmt = $newconn->conn->prepare("SELECT * FROM Student where advisor=".$insid);
+$stmt->execute();
+$students = $stmt->fetchall();
 //print_r($gradeKlass);
 
 ?>
@@ -187,7 +213,7 @@ $gradeKlass = $stmt->fetchall();
                         </tr>
                     </thead>
                     <tbody>
-                            <?php  ?>
+                            <?php fillInstructorAdminCourse($newconn,$givenCourses); ?>
                     </tbody>
                 </table>
             </div>
@@ -203,12 +229,12 @@ $gradeKlass = $stmt->fetchall();
                             <th scope="col">Student Number</th>
                             <th scope="col">Student Name</th>
                             <th scope="col">Student Surname</th>
-                            <th scope="col">Year</th>
+                            <th scope="col">Start Year</th>
                             <th scope="col">GPA</th>
                         </tr>
                     </thead>
                     <tbody>
-                            <?php  ?>
+                            <?php  fillInstructorAdminStudent($students); ?>
                     </tbody>
                 </table>
             </div>

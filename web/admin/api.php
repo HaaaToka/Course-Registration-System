@@ -97,6 +97,93 @@ if(isset($_POST['function'])){
         echo json_encode(array("P"=>$P,"F"=>$F));
     }
 
+    else if($_POST['function']=="updateFacultyBarChart"){
+   
+        $stmt=$newconn->conn->prepare("Select name from Faculty");
+        $stmt->execute();
+        $Facs=$stmt->fetchall();
+        // print_r($Facs);
+        
+        $facArr = array( );
+        
+        foreach($Facs as $f){
+            //print_r($f);
+            $stmt=$newconn->conn->prepare("select count(*) as count from takedropfacultycountView where facultyName='".$f['name']."' and takedrop='T'");
+            $stmt->execute();
+            $T = $stmt->fetchall()[0]['count'];
+        
+            $stmt=$newconn->conn->prepare("select count(*) as count from takedropfacultycountView where facultyName='".$f['name']."' and takedrop='D'");
+            $stmt->execute();
+            $D = $stmt->fetchall()[0]['count'];
+        
+            if($T+$D>0){
+                array_push($facArr,array("name"=>$f['name'],"T"=>$T, "D"=>$D ));
+            }
+        }
+        
+        // print_r($facArr);
+
+        echo json_encode($facArr);
+    }
+
+    else if($_POST['function']=="updateDepartmentBarChart"){
+
+        $facid=$_POST['facultyid'];
+   
+        $stmt=$newconn->conn->prepare("Select name from Department where facultyID=".$facid);
+        $stmt->execute();
+        $Deps=$stmt->fetchall();
+        // print_r($Facs);
+        
+        $facArr = array( );
+        
+        foreach($Deps as $s){
+            //print_r($s);
+            $stmt=$newconn->conn->prepare("select count(*) as count from takedropdepartmentcountView where depname='".$s['name']."' and takedrop='T'");
+            $stmt->execute();
+            $T = $stmt->fetchall()[0]['count'];
+        
+            $stmt=$newconn->conn->prepare("select count(*) as count from takedropdepartmentcountView where depname='".$s['name']."' and takedrop='D'");
+            $stmt->execute();
+            $D = $stmt->fetchall()[0]['count'];
+        
+            if($T+$D>0){
+                array_push($facArr,array("name"=>$s['name'],"T"=>$T, "D"=>$D ));
+            }
+        }
+
+        echo json_encode($facArr);
+    }
+    
+    else if($_POST['function']=="updateCourseBarChart"){
+
+        $depid=$_POST['departmentid'];
+   
+        $stmt=$newconn->conn->prepare("Select name from Course where departmentID=".$depid);
+        $stmt->execute();
+        $Cous=$stmt->fetchall();
+        // print_r($Facs);
+        
+        $facArr = array( );
+        
+        foreach($Cous as $c){
+            // print_r($c);
+            $stmt=$newconn->conn->prepare("select count(*) as count FROM takedropcoursecountView where coursename='".$c['name']."' and takedrop='T';");
+            $stmt->execute();
+            $T = $stmt->fetchall()[0]['count'];
+        
+            $stmt=$newconn->conn->prepare("select count(*) as count from takedropcoursecountView where coursename='".$c['name']."' and takedrop='D'");
+            $stmt->execute();
+            $D = $stmt->fetchall()[0]['count'];
+        
+            if($T+$D>0){
+                array_push($facArr,array("name"=>$c['name'],"T"=>$T, "D"=>$D ));
+            }
+        }
+
+        echo json_encode($facArr);
+    }
+
     else if($_POST['function']=="updateStu"){
 
         $depid = $_POST['departmentid'];
@@ -158,7 +245,12 @@ if(isset($_POST['function'])){
                 <tbody>';
         $i=1;
         foreach($Students as $stu){
-            echo '<tr onclick="window.location=\'inspectStudent.php?stuid='.$stu['studentID'].'\';">
+            $color="";
+            if($stu['grade'][0]=="F")
+                $color='class="table-danger"';
+            else
+                $color='class="table-primary"';
+            echo '<tr '.$color.' onclick="window.location=\'inspectStudent.php?stuid='.$stu['studentID'].'\';">
                     <th scope="row">'.$i.'</th>
                     <td>'.$stu['studentID'].'</td>
                     <td>'.$stu['StudentName'].'</td>

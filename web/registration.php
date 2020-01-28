@@ -8,9 +8,16 @@ include_once "database.php";
 
 $message="";
 
+$newconn = new ConnectDB($sn,$un,$pss,$db);
+
+$stmt=$newconn->conn->prepare("select * from Department order by name");
+$stmt->execute();
+$deps=$stmt->fetchall();
+//print_r($deps);
+
 
 if(isset($_POST['form'])){
-    $newconn = new ConnectDB($sn,$un,$pss,$db);
+    
     // $sql = "call registration(':nname',':ssurname',':ppassword',:yyear)";
     // $stmt = $newconn->conn->prepare($sql);
     // $stmt -> bindParam('name',$_POST['name'],PDO::PARAM_STR);
@@ -18,13 +25,17 @@ if(isset($_POST['form'])){
     // $stmt -> bindParam('password',$_POST['password'],PDO::PARAM_STR);
     // $stmt -> bindParam('year',$_POST['startyear'],PDO::PARAM_INT);
 
-    $nname = sqli_check_1($_POST['name']);
-    $ssurname = sqli_check_1($_POST['surname']);
+    $nname = sql_check($_POST['name']);
+    $ssurname = sql_check($_POST['surname']);
     // $ppass = sqli_check_1($_POST['password']);
-    $yyear =sqli_check_1($_POST['startyear']);
+    $yyear =sql_check($_POST['startyear']);
     $uuserid=-1;
     // $sql="call registration('".$nname."','".$ssurname."','".$ppass."',".$yyear.")";
-    $sql="call registration('".$nname."','".$ssurname."',".$yyear.")";
+    $depid = sql_check($_POST['department']);
+
+
+    $sql="call registration('".$nname."','".$ssurname."',".$yyear.",".$depid.")";
+    //echo $sql;
     $stmt = $newconn->conn->prepare($sql);
     if(!$stmt){
         die("Error: ". print_r($stmt->errorInfo()));
@@ -72,7 +83,7 @@ if(isset($_POST['form'])){
         <input type="password" id="password" name="password"></p> -->
         
         <p><label for="startyear">Start Year:</label><br />
-            <select name="startyear" id="startyear">
+        <select name="startyear" id="startyear">
             <option value="2013">2013</option>
             <option value="2014">2014</option>
             <option value="2015">2015</option>
@@ -81,7 +92,20 @@ if(isset($_POST['form'])){
             <option value="2018">2018</option>
         </select></p>
 
-        <p>If you sign up, You are accepted being in the computer engineering department and being a student</p>
+        <p><label for="department">Department:</label><br/>
+        <select name="department" id="department">
+            
+            <?php
+            
+                foreach($deps as $ss){
+                    echo '<option value='.$ss["departmentID"].'>'.$ss["name"].'</option>';
+                }
+            
+            ?>
+            
+        </select></p>
+
+        <!-- <p>If you sign up, You are accepted being in the computer engineering department and being a student</p> -->
 
         <button type="submit" name="form" value="submit">Sign Up</button>
 
