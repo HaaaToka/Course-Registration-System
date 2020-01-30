@@ -219,7 +219,7 @@ if(isset($_POST['function'])){
 
         $depid = $_POST['departmentid'];
 
-        $stmt=$newconn->conn->prepare("select studentID,stu.name as StudentName,stu.surname as StudentSurname,startYear,stu.sex,ins.name as AdvisorName,ins.surname as AdvisorSurname from (select * from Student  where graduate=0 and  departmentID=".$depid.") stu, (select * from Instructor where departmentID=".$depid.") ins where instructorID=advisor order by startYear ASC;");
+        $stmt=$newconn->conn->prepare("select studentID,stu.name as StudentName,stu.surname as StudentSurname,startYear,stu.sex,ins.name as AdvisorName,ins.surname as AdvisorSurname,(collectedGrade /collectedCredits) as GPA from (select * from Student  where graduate=0 and  departmentID=".$depid.") stu, (select * from Instructor where departmentID=".$depid.") ins where instructorID=advisor order by startYear ASC , GPA DESC;");
         $stmt->execute();
         $Students=$stmt->fetchall();
 
@@ -231,6 +231,7 @@ if(isset($_POST['function'])){
                         <th scope="col">Student Name</th>
                         <th scope="col">Student Surname</th>
                         <th scope="col">Start Year</th>
+                        <th scope="col">GPA</th>
                         <th scope="col">Gender</th>
                         <th scope="col">Advisor Name</th>
                         <th scope="col">Advisor Surname</th>
@@ -245,6 +246,7 @@ if(isset($_POST['function'])){
                     <td>'.$stu['StudentName'].'</td>
                     <td>'.$stu['StudentSurname'].'</td>
                     <td>'.$stu['startYear'].'</td>
+                    <td>'.number_format($stu['GPA'], 2, '.', ',').'</td>
                     <td>'.$stu['sex'].'</td>
                     <td>'.$stu['AdvisorName'].'</td>
                     <td>'.$stu['AdvisorSurname'].'</td>
@@ -254,6 +256,49 @@ if(isset($_POST['function'])){
         echo '</tbody>
         </table>';
     }
+    
+
+    else if($_POST['function']=="updateGraduatedStu"){
+
+        $depid = $_POST['departmentid'];
+
+        //echo "select * from Student where departmentID=".$depid." and graduate=1";
+        $stmt=$newconn->conn->prepare("select * from Student where departmentID=".$depid." and graduate=1 order by startYear DESC, (collectedGrade/collectedCredits) DESC");
+        $stmt->execute();
+        $Students=$stmt->fetchall();
+
+        echo '<table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Student Number</th>
+                        <th scope="col">Student Name</th>
+                        <th scope="col">Student Surname</th>
+                        <th scope="col">Start Year</th>
+                        <th scope="col">Graduated Year</th>
+                        <th scope="col">GPA</th>
+                        <th scope="col">Gender</th>
+                    </tr>
+                </thead>
+                <tbody>';
+        $i=1;
+        foreach($Students as $stu){
+            echo '<tr onclick="window.location=\'inspectStudent.php?stuid='.$stu['studentID'].'\';">
+                    <th scope="row">'.$i.'</th>
+                    <td>'.$stu['studentID'].'</td>
+                    <td>'.$stu['name'].'</td>
+                    <td>'.$stu['surname'].'</td>
+                    <td>'.$stu['startYear'].'</td>
+                    <td>2019</td>
+                    <td>'.number_format(($stu['collectedGrade']/$stu['collectedCredits']), 2, '.', ',').'</td>
+                    <td>'.$stu['sex'].'</td>
+                </tr>';
+            $i++;
+        }
+        echo '</tbody>
+        </table>';
+    }
+
 
     else if($_POST['function']=="updateStuGradedClass"){
 

@@ -127,3 +127,53 @@ if(isset($_POST["submit"])) {
 </div>
 
 
+
+<?php
+
+
+function fillInstructorAdvisedStudent($students){
+    $i=1;
+    foreach($students as $stu){
+
+        echo '<tr>
+                <td scope="col">'.$i.'</td>
+                <td scope="col">'.$stu["studentID"].'</td>
+                <td scope="col">'.$stu["name"].'</td>
+                <td scope="col">'.$stu["surname"].'</td>
+                <td scope="col">'.$stu['startYear'].'</td>
+                <td scope="col">'.number_format($stu['collectedGrade']/$stu['collectedCredits'], 2, '.', ',').'</td>
+            </tr>
+                ';
+        $i++;
+    }
+}
+
+
+
+$stmt = $newconn->conn->prepare("SELECT * FROM Student where advisor=".$_SESSION['userid']);
+$stmt->execute();
+$students = $stmt->fetchall();
+//print_r($gradeKlass);
+
+
+?>
+
+    <div class="container" id="insstudents">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Student Number</th>
+                    <th scope="col">Student Name</th>
+                    <th scope="col">Student Surname</th>
+                    <th scope="col">Start Year</th>
+                    <th scope="col">GPA</th>
+                </tr>
+            </thead>
+            <tbody>
+                    <?php  fillInstructorAdvisedStudent($students); ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+

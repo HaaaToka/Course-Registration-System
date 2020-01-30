@@ -137,6 +137,10 @@ $newconn = new ConnectDB($sn,$un,$pss,$db);
             <a class="nav-link" href="#instructor" role="tab" data-toggle="tab"><i
                     class="fas fa-info-circle"></i> Instructors </a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#graded" role="tab" data-toggle="tab"><i
+                    class="fas fa-info-circle"></i> Graduated Students </a>
+        </li>
     </ul>
 
     <!-- Tab panes -->
@@ -145,6 +149,9 @@ $newconn = new ConnectDB($sn,$un,$pss,$db);
 
         </div>
         <div role="tabpanel" class="tab-pane fade" id="instructor">
+
+        </div>
+        <div role="tabpanel" class="tab-pane fade" id="graded">
 
         </div>
     </div>
@@ -178,6 +185,20 @@ function updateStuTable(departmentid){
         },
         success:function(data){
             document.getElementById('student').innerHTML=data;
+        }
+    });
+}
+
+function updateOldStuTable(departmentid){
+    $.ajax({
+        url:"api.php",
+        type:"POST",
+        data:{
+            function:"updateGraduatedStu",
+            departmentid:departmentid
+        },
+        success:function(data){
+            document.getElementById('graded').innerHTML=data;
         }
     });
 }
@@ -234,6 +255,7 @@ $(document).on('click','.btn-secondary',function(){
     updateChart(fid,did);
     updateStuTable(did);
     updateInsTable(did);
+    updateOldStuTable(did);
 });
 
 
