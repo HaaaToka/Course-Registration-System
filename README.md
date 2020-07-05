@@ -5,4 +5,4 @@ We developed a fully-functioning web application for our course registration sys
 [Look at our project in detail](https://github.com/HaaaToka/Course-Registration-System/blob/master/phase4/report/report.pdf)
 
 
-![joinClass](https://github.com/HaaaToka/Course-Registration-System/joinClass.png)
+![joinClass](https://github.com/HaaaToka/Course-Registration-System/blob/master/joinClass.png)
